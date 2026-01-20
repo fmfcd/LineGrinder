@@ -249,6 +249,11 @@ namespace LineGrinder
         [DataMember]
         private float isoPadTouchDownZLevel = DEFAULT_ISOPADTOUCHDOWN_ZLEVEL;
 
+        // for engrave with one trace
+        public const bool DEFAULT_INT_OUTLINE = true;
+        [DataMember]
+        private bool intOutline = DEFAULT_INT_OUTLINE;
+
         #endregion
 
         // ####################################################################
@@ -669,6 +674,7 @@ namespace LineGrinder
             if (isoPadTouchDownZLevel != DEFAULT_ISOPADTOUCHDOWN_ZLEVEL) return false;
             if (isoCutGCodeEnabled != DEFAULT_ISOCUTGCODE_ENABLED) return false;
             if (ignoreFillAreas != DEFAULT_IGNORE_FILL_AREAS) return false;
+            if (intOutline != DEFAULT_INT_OUTLINE) return false;
 
             // ref pins
             if (referencePinGCodeEnabled != DEFAULT_REFERENCEPINGCODE_ENABLED) return false;
@@ -772,7 +778,7 @@ namespace LineGrinder
             isoPadTouchDownZLevel = DEFAULT_ISOPADTOUCHDOWN_ZLEVEL;
             isoCutGCodeEnabled = DEFAULT_ISOCUTGCODE_ENABLED;
             ignoreFillAreas = DEFAULT_IGNORE_FILL_AREAS;
-
+            intOutline = DEFAULT_INT_OUTLINE;
             // ref pins
             referencePinGCodeEnabled = DEFAULT_REFERENCEPINGCODE_ENABLED;
             referencePinsAreIsoRouted = DEFAULT_REFERENCEPINAREISOROUTED_ENABLED;
@@ -2158,6 +2164,25 @@ namespace LineGrinder
             set
             {
                 isoPadTouchDownZLevel = value;
+            }
+        }
+        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+        /// <summary>
+        /// Gets/Sets the intOutline
+        /// </summary>
+        [DescriptionAttribute("For engrave with one trace.")]
+        [CategoryAttribute("Interior Outline alone")]
+        [ReadOnlyAttribute(false)]
+        [BrowsableAttribute(true)]
+        public bool IntOutline
+        {
+            get
+            {
+                return intOutline;
+            }
+            set
+            {
+                intOutline = value;
             }
         }
 

@@ -1437,6 +1437,8 @@ namespace LineGrinder
         /// <remarks>The completion of this step is the end of isoStep3</remarks>
         /// <returns>z succes, nz fail</returns>
         /// <param name="errStr">a helpful error message</param>
+        /// 
+        private bool bIntCut = true;
         public int PerformIsoPlotSegmentDiscovery(ref string errStr)
         {
             Point point1;
@@ -1449,6 +1451,7 @@ namespace LineGrinder
             int retInt;
 
             LogMessage("PerformIsoPlotSegmentDiscovery called");
+            bIntCut = currentFileManager.IntOutline;  // options intOutline -> a initialiser ici ?
 
             // first we do all the lines.
             foreach (IsoPlotObject isoPlotObject in isoPlotObjList)
@@ -1528,7 +1531,7 @@ namespace LineGrinder
                     IsoPlotStep3List.Add(isoSeg);
                 }
             } // bottom of  foreach (IsoPlotObject isoPlotObject in isoPlotObjList)
-
+            
             // next we do all the polygons
             foreach (IsoPlotObject isoPlotObject in isoPlotObjList)
             {
@@ -1721,7 +1724,8 @@ namespace LineGrinder
                 {
                     if ((isoSeg is IsoPlotObjectSegment_Line) == false) continue;
                     //DebugMessage("ContourLinesegA="+(isoLine as IsoPlotSegment_Line).ToString());
-                    IsoPlotStep3List.Add(isoSeg);
+                    if (!bIntCut)  // seulement le contour à découper
+                        IsoPlotStep3List.Add(isoSeg);
                 }
             } // bottom of  foreach (IsoPlotObject isoPlotObject in isoPlotObjList)
 
@@ -1744,7 +1748,8 @@ namespace LineGrinder
                 {
                     if ((isoArc is IsoPlotObjectSegment_Arc) == false) continue;
                     //DebugMessage("segE=" + (isoLine as IsoPlotSegment_Arc).ToString());
-                    IsoPlotStep3List.Add(isoArc);
+                    if (!bIntCut)  // seulement le contour à découper
+                        IsoPlotStep3List.Add(isoArc);
                 }
 
             } // bottom of  foreach (IsoPlotObject isoPlotObject in isoPlotObjList)
