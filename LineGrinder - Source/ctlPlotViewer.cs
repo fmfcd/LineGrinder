@@ -1008,7 +1008,7 @@ namespace LineGrinder
                     try
                     {
                         tmpOrigin.X = workingOriginAtMouseDown.X - (lastMouseDownPosition.X - e.X);
-                      //  DebugMessage("tmpOrigin.X=" + tmpOrigin.X.ToString() + " workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + hScrollBar1.Value.ToString() + " hScrollBar1.Minimum=" + hScrollBar1.Minimum.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
+                        DebugMessage("tmpOrigin.X=" + tmpOrigin.X.ToString() + " workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + hScrollBar1.Value.ToString() + " hScrollBar1.Minimum=" + hScrollBar1.Minimum.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
 
                         if (tmpOrigin.X < ((hScrollBar1.Maximum - hScrollBar1.LargeChange) * -1))
                         {

@@ -5786,7 +5786,7 @@ namespace LineGrinder
                     return -371;
                 }
                 LogMessage("CreateBedFlatteningGCode: GeneratePocketGCode successful");
-
+                
                 // now add the footer lines
                 PopulateGCodeFileWithStandardFooterLines(ref outGCodeFile, gerberFile, null);
 
@@ -6108,7 +6108,7 @@ namespace LineGrinder
                 outputIsoPlotBuilder.CurrentFileManager = CurrentFileManager;
                 LogMessage("CreateIsolationCutGCode: gerberFileToConvert.PerformGerberToGCodeStep1 successful");
                 gerberToGCodeStep1Successful = true;
-
+                
                 // stop the clock
                 timer.Stop();
                 timeTaken = timer.Elapsed;
@@ -6167,7 +6167,7 @@ namespace LineGrinder
                 timeTaken = timer.Elapsed;
                 string isoStep3ElapsedTime = timeTaken.ToString(@"m\:ss\.fff");
                 LogMessage("GCode Conversion: isoStep3 elapsed time is " + isoStep3ElapsedTime);
-
+                
                 // #################
                 // ### perform Step 4
                 // #################
@@ -6203,7 +6203,7 @@ namespace LineGrinder
                     coLine = new GCodeCmd_Comment("... pad touchdown end ...");
                     outputGCodeFile.AddLine(coLine);
                 }
-
+                
                 // now add the footer lines
                 PopulateGCodeFileWithStandardFooterLines(ref outputGCodeFile, gerberFileToConvert, null);
 
@@ -6297,6 +6297,30 @@ namespace LineGrinder
             this.ctlFileManagersDisplay1.AddNewFileManager();
         }
 
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxInOutline_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void richTextBoxGerberCode_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ctlFileManagersDisplay1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ctlPlotViewer1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

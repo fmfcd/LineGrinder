@@ -58,7 +58,6 @@ namespace LineGrinder
             this.radioButtonMainViewEdgeMillGCode = new System.Windows.Forms.RadioButton();
             this.radioButtonIsoPlotStep1 = new System.Windows.Forms.RadioButton();
             this.radioButtonMainViewGerberPlot = new System.Windows.Forms.RadioButton();
-            this.ctlPlotViewer1 = new LineGrinder.ctlPlotViewer();
             this.tabPageGerberCode = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxOpenGerberFileName = new System.Windows.Forms.TextBox();
@@ -135,6 +134,7 @@ namespace LineGrinder
             this.buttonSaveDrillGCodeAs = new System.Windows.Forms.Button();
             this.textBoxMouseCursorDisplay = new System.Windows.Forms.TextBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.ctlPlotViewer1 = new LineGrinder.ctlPlotViewer();
             this.tabControl1.SuspendLayout();
             this.tabPagePlot.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -185,7 +185,7 @@ namespace LineGrinder
             this.tabPagePlot.Controls.Add(this.ctlPlotViewer1);
             this.tabPagePlot.Location = new System.Drawing.Point(4, 22);
             this.tabPagePlot.Name = "tabPagePlot";
-            this.tabPagePlot.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePlot.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPagePlot.Size = new System.Drawing.Size(957, 593);
             this.tabPagePlot.TabIndex = 0;
             this.tabPagePlot.Text = "Plot View";
@@ -279,7 +279,7 @@ namespace LineGrinder
             this.groupBox1.Controls.Add(this.radioButtonMainViewGerberPlot);
             this.groupBox1.Location = new System.Drawing.Point(3, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(127, 392);
+            this.groupBox1.Size = new System.Drawing.Size(124, 432);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Plot View Shows ...";
@@ -489,16 +489,6 @@ namespace LineGrinder
             this.radioButtonMainViewGerberPlot.UseVisualStyleBackColor = true;
             this.radioButtonMainViewGerberPlot.CheckedChanged += new System.EventHandler(this.radioButtonMainViewGerberPlot_CheckedChanged);
             // 
-            // ctlPlotViewer1
-            // 
-            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctlPlotViewer1.Location = new System.Drawing.Point(133, 2);
-            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
-            this.ctlPlotViewer1.Size = new System.Drawing.Size(823, 588);
-            this.ctlPlotViewer1.TabIndex = 2;
-            // 
             // tabPageGerberCode
             // 
             this.tabPageGerberCode.Controls.Add(this.label1);
@@ -506,7 +496,7 @@ namespace LineGrinder
             this.tabPageGerberCode.Controls.Add(this.richTextBoxGerberCode);
             this.tabPageGerberCode.Location = new System.Drawing.Point(4, 22);
             this.tabPageGerberCode.Name = "tabPageGerberCode";
-            this.tabPageGerberCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGerberCode.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPageGerberCode.Size = new System.Drawing.Size(957, 593);
             this.tabPageGerberCode.TabIndex = 2;
             this.tabPageGerberCode.Text = "Gerber File";
@@ -546,6 +536,7 @@ namespace LineGrinder
             this.richTextBoxGerberCode.TabIndex = 0;
             this.richTextBoxGerberCode.Text = "";
             this.richTextBoxGerberCode.WordWrap = false;
+            this.richTextBoxGerberCode.TextChanged += new System.EventHandler(this.richTextBoxGerberCode_TextChanged);
             // 
             // tabPageExcellonFile
             // 
@@ -600,7 +591,7 @@ namespace LineGrinder
             this.tabPageIsolationGCode.Controls.Add(this.richTextBoxIsolationGCode);
             this.tabPageIsolationGCode.Location = new System.Drawing.Point(4, 22);
             this.tabPageIsolationGCode.Name = "tabPageIsolationGCode";
-            this.tabPageIsolationGCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageIsolationGCode.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPageIsolationGCode.Size = new System.Drawing.Size(957, 593);
             this.tabPageIsolationGCode.TabIndex = 3;
             this.tabPageIsolationGCode.Text = "Isolation GCode";
@@ -843,7 +834,7 @@ namespace LineGrinder
             this.tabPageSettings.Controls.Add(this.buttonSaveConfiguration);
             this.tabPageSettings.Location = new System.Drawing.Point(4, 22);
             this.tabPageSettings.Name = "tabPageSettings";
-            this.tabPageSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSettings.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPageSettings.Size = new System.Drawing.Size(957, 593);
             this.tabPageSettings.TabIndex = 1;
             this.tabPageSettings.Text = "Settings";
@@ -1138,9 +1129,11 @@ namespace LineGrinder
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ctlFileManagersDisplay1.Location = new System.Drawing.Point(4, 101);
+            this.ctlFileManagersDisplay1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ctlFileManagersDisplay1.Name = "ctlFileManagersDisplay1";
             this.ctlFileManagersDisplay1.Size = new System.Drawing.Size(730, 486);
             this.ctlFileManagersDisplay1.TabIndex = 6;
+            this.ctlFileManagersDisplay1.Load += new System.EventHandler(this.ctlFileManagersDisplay1_Load);
             // 
             // buttonSaveConfiguration
             // 
@@ -1361,6 +1354,18 @@ namespace LineGrinder
             this.textBoxMouseCursorDisplay.Size = new System.Drawing.Size(197, 20);
             this.textBoxMouseCursorDisplay.TabIndex = 34;
             // 
+            // ctlPlotViewer1
+            // 
+            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctlPlotViewer1.Location = new System.Drawing.Point(133, 2);
+            this.ctlPlotViewer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
+            this.ctlPlotViewer1.Size = new System.Drawing.Size(823, 590);
+            this.ctlPlotViewer1.TabIndex = 2;
+            this.ctlPlotViewer1.Load += new System.EventHandler(this.ctlPlotViewer1_Load);
+            // 
             // frmMain1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1387,7 +1392,7 @@ namespace LineGrinder
             this.Controls.Add(this.buttonRecentFiles);
             this.Controls.Add(this.tabControl1);
             this.Location = new System.Drawing.Point(0, 0);
-            this.MinimumSize = new System.Drawing.Size(1140, 695);
+            this.MinimumSize = new System.Drawing.Size(857, 480);
             this.Name = "frmMain1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "Line Grinder";
@@ -1438,7 +1443,6 @@ namespace LineGrinder
         private System.Windows.Forms.TextBox textBoxOpenGerberFileName;
         private System.Windows.Forms.RichTextBox richTextBoxGerberCode;
         private System.Windows.Forms.Label label1;
-        private ctlPlotViewer ctlPlotViewer1;
         private System.Windows.Forms.RichTextBox richTextBoxIsolationGCode;
         private System.Windows.Forms.Button buttonOpenFile;
         private System.Windows.Forms.Button buttonRecentFiles;
@@ -1532,6 +1536,7 @@ namespace LineGrinder
         private System.Windows.Forms.RadioButton radioButtonOutputUnitsAreIN;
         private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.Button buttonQuickSetupEasyEDA;
+        private ctlPlotViewer ctlPlotViewer1;
     }
 }
 
