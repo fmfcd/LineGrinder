@@ -55,6 +55,9 @@ namespace LineGrinder
         // this is an upper bound used when cutting pockets
         private const int MAX_POCKETING_PASSES = 1000;
 
+        // selection de ligne source Gcode fmfcd
+        public List<int> listeIndexSelection = new List<int>();  // passer en proprité ?
+
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
@@ -131,6 +134,7 @@ namespace LineGrinder
         {
             stateMachine = new GCodeFileStateMachine();
             SourceLines = new List<GCodeCmd>();
+            listeIndexSelection.Clear();
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -446,10 +450,13 @@ namespace LineGrinder
             // set up our pens+brushes
             StateMachine.PlotBorderPen = new Pen(StateMachine.PlotLineColor, penWidth);
             // StateMachine.PlotBorderPen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-
-            foreach (GCodeCmd lineObj in SourceLines)
+            // fmfcd
+            //foreach (GCodeCmd lineObj in SourceLines)
+            for (int index = 0; index < SourceLines.Count; index++) 
             {
-                errAction = lineObj.PerformPlotGCodeAction(graphicsObj, StateMachine, wantEndPointMarkers, ref errInt, ref errStr);
+                GCodeCmd lineObj = SourceLines[index];
+                bool bSelect = (listeIndexSelection.FindIndex( i => { return i == index; } ) != -1);  // la ligne est-elle dans la liste des éléments sélectionnés
+                errAction = lineObj.PerformPlotGCodeAction(graphicsObj, StateMachine, wantEndPointMarkers, ref errInt, ref errStr, bSelect);
                 if (errAction == PlotActionEnum.PlotAction_Continue)
                 {
                     // all is well
@@ -780,6 +787,19 @@ namespace LineGrinder
             return 0;
         }
 
+        /// fmfcd
+        /// 
+        public void supSelectLineSource()
+        {
+            // classer dans l'orde décroissant
+            listeIndexSelection = listeIndexSelection.OrderByDescending(x => x).ToList();
+            for (int index = 0; index < listeIndexSelection.Count; index++)
+            {
+                SourceLines.RemoveAt(listeIndexSelection[index]);  // ne les supprime pas tous !
+                
+            }
+            listeIndexSelection.Clear();
+        }
     }
 }
 

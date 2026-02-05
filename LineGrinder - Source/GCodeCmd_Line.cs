@@ -35,6 +35,12 @@ namespace LineGrinder
         private int x1 = -1;
         private int y1 = -1;
 
+        public int X0 { get => x0; set => x0 = value; }  // fmfcd
+        public int Y0 { get => y0; set => y0 = value; }  // fmfcd
+
+        public int X1 { get => x1; set => x1 = value; }  // fmfcd
+        public int Y1 { get => y1; set => y1 = value; }  // fmfcd
+
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Constructor
@@ -43,6 +49,7 @@ namespace LineGrinder
         /// <param name="y0In">Y0 coord</param>
         /// <param name="x1In">X1 coord</param>
         /// <param name="y1In">Y1 coord</param>
+        /// 
         public GCodeCmd_Line(int x0In, int y0In, int x1In, int y1In) : base(0, 0)
         {
             x0 = x0In;
@@ -232,7 +239,8 @@ namespace LineGrinder
         /// <param name="wantEndPointMarkers">if true we draw the endpoints of the gcodes
         /// in a different color</param>
         /// <returns>an enum value indicating what next action to take</returns>
-        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString)
+        // fmfcd
+        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString, bool bSelect)
         {
             Pen workingPen = null;
             Brush workingBrush = null;
@@ -250,8 +258,14 @@ namespace LineGrinder
             }
 
             // GetPen, it will have been set up to have the proper width and color
-            workingPen = stateMachine.PlotBorderPen;
+
+            if (bSelect)  // fmfcd
+                workingPen = stateMachine.PlotSelectPen;
+            else
+                workingPen = stateMachine.PlotBorderPen;
+
             workingBrush = stateMachine.PlotBorderBrush;
+            
 
             //DebugTODO("remove this");
             //if (DebugID == 3) workingPen = Pens.Red;

@@ -46,6 +46,11 @@ namespace LineGrinder
         // this is bit of a hangover from the gerber spec so we know how to draw the line
         private bool wantMultiQuadrant = false;
 
+        public int X0 { get => x0; set => x0 = value; }  // fmfcd
+        public int Y0 { get => y0; set => y0 = value; }  // fmfcd
+
+        public int X1 { get => x1; set => x1 = value; }  // fmfcd
+        public int Y1 { get => y1; set => y1 = value; }  // fmfcd
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Constructor
@@ -392,7 +397,8 @@ namespace LineGrinder
         /// <param name="wantEndPointMarkers">if true we draw the endpoints of the gcodes
         /// in a different color</param>
         /// <returns>an enum value indicating what next action to take</returns>
-        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString)
+        // fmfcd
+        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString, bool bSelect)
         {
             Pen workingPen = null;
             Brush workingBrush = null;
@@ -445,7 +451,11 @@ namespace LineGrinder
             }
 
             // GetPen, it will have been set up to have the proper width and color
-            workingPen = stateMachine.PlotBorderPen;
+            
+            if (bSelect)  // fmfcd
+                workingPen = stateMachine.PlotSelectPen; 
+            else 
+                workingPen = stateMachine.PlotBorderPen;
             workingBrush = stateMachine.PlotBorderBrush;
 
             // create an enclosing rectangle 

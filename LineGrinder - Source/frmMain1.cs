@@ -858,7 +858,7 @@ namespace LineGrinder
                 SetIsolationArrayBitmapAppropriateToDisplayMode();
                 // send the builder and GCode objects to the plot viewer
                 ctlPlotViewer1.IsoPlotBuilderToDisplay = CurrentIsoPlotBuilder;
-                ctlPlotViewer1.GCodeFileToDisplay = CurrentIsolationGCodeFile;
+                ctlPlotViewer1.GCodeFileToDisplay = CurrentIsolationGCodeFile;   // 
             }
             else if ((radioButtonIsoPlotStep2.Enabled == true) && (radioButtonIsoPlotStep2.Checked == true))
             {
@@ -3439,11 +3439,22 @@ namespace LineGrinder
 #endif
             }
         }
-
+        // fmfcd edition du gcode
+        private void buttonSupprimeGCode_Click(object sender, EventArgs e)
+        {
+            if (ctlPlotViewer1.GCodeFileToDisplay != null)
+            {
+                ctlPlotViewer1.GCodeFileToDisplay.supSelectLineSource();
+                ctlPlotViewer1.Invalidate();
+                CurrentIsolationGCodeFile = ctlPlotViewer1.GCodeFileToDisplay;
+                richTextBoxIsolationGCode.Text = CurrentIsolationGCodeFile.GetGCodeCmdsAsText().ToString();
+            }
+        }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Handles a press on the convert Gerber to GCode button
         /// </summary>
+        
         private void buttonConvertToGCode_Click(object sender, EventArgs e)
         {
             TimeSpan timeTaken;

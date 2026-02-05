@@ -201,7 +201,8 @@ namespace LineGrinder
         /// <param name="wantEndPointMarkers">if true we draw the endpoints of the gcodes
         /// in a different color</param>
         /// <returns>an enum value indicating what next action to take</returns>
-        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString)
+        // fmfcd
+        public override PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString, bool bSelect)
         {
             Brush workingBrush = null;
 

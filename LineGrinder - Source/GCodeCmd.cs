@@ -319,7 +319,8 @@ namespace LineGrinder
         /// <param name="wantEndPointMarkers">if true we draw the endpoints of the gcodes
         /// in a different color</param>
         /// <returns>z success, nz fail</returns>
-        public virtual PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString)
+        // fmfcd
+        public virtual PlotActionEnum PerformPlotGCodeAction(Graphics graphicsObj, GCodeFileStateMachine stateMachine, bool wantEndPointMarkers, ref int errorValue, ref string errorString, bool bSelect)
         {
             // ignore this
             errorValue = 0;

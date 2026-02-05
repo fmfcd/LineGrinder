@@ -84,6 +84,7 @@ namespace LineGrinder
         private float midPlotYCoord = 0;
 
         private PointF workingOrigin = new PointF(0, 0);
+        private Matrix viewportMatrix = new Matrix();// fmfcd
         private const int DEFAULT_PADDING_LEFT = 10;
         private const int DEFAULT_PADDING_TOP = 10;
         private const int DEFAULT_PADDING_RIGHT = 10;
@@ -139,6 +140,9 @@ namespace LineGrinder
 
         private TextBox mouseCursorDisplayControl = null;
         //private Matrix lastTransformMatrix = null;
+
+
+        
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
@@ -425,6 +429,7 @@ namespace LineGrinder
             maxPlotXCoord = 0;
             maxPlotYCoord = 0;
             workingOrigin = new PointF(0, 0);
+            
             magnificationLevel = DEFAULT_MAGNIFICATION_LEVEL;
             plotPadding = new Padding(DEFAULT_PADDING_LEFT, DEFAULT_PADDING_TOP, DEFAULT_PADDING_RIGHT, DEFAULT_PADDING_BOTTOM);
             virtualPlotSize = new Size(DEFAULT_PLOT_WIDTH, DEFAULT_PLOT_HEIGHT);
@@ -906,6 +911,64 @@ namespace LineGrinder
         /// </summary>
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
+            // fmfcd
+            Point convertedPoint = MouseToWorld(e.Location);
+
+            if (gcodeFileToDisplay != null)
+            {
+                int index = gcodeFileToDisplay.SourceLines.FindIndex(  g => {
+                    // predicate
+
+                    if (g.GetType() == typeof(GCodeCmd_Line))
+                    {
+                        if ((Math.Abs(((GCodeCmd_Line)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Line)g).Y0 - convertedPoint.Y) < 50))
+                            return true;
+                    }
+                    else if (g.GetType() == typeof(GCodeCmd_Arc))
+                    {
+                        if ((Math.Abs(((GCodeCmd_Arc)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Arc)g).Y0 - convertedPoint.Y) < 50))
+                            return true;
+                    }
+
+                    return false;
+                });
+                if (index == -1)
+                    mouseCursorDisplayControl.Text = string.Format("no gCode ");
+                else
+                {// fmfcd
+
+                    GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines[index];
+                    string sgCodeCmd= gCodeCmd.GetGCodeCmd( gcodeFileToDisplay.StateMachine);
+                    mouseCursorDisplayControl.Text = string.Format("index" + index + " gCode " + sgCodeCmd);
+                     // en 2 étapes : sélection puis suppression souligner la ligne sélectionner en rouge
+                    if (!gcodeFileToDisplay.listeIndexSelection.Contains(index))  // si pas déjà dans la liste
+                        gcodeFileToDisplay.listeIndexSelection.Add(index); // ajouter aux éléments sélectionné                    
+                    Invalidate();
+
+                }
+                /*GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines.Find( g => {
+                    // predicate
+
+                    if (g.GetType() == typeof(GCodeCmd_Line))
+                    {
+                        if ((Math.Abs(((GCodeCmd_Line)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Line)g).Y0 - convertedPoint.Y) < 50))
+                            return true;
+                    }
+                        
+                    return false;
+                });
+               
+                if (gCodeCmd==null)
+                    mouseCursorDisplayControl.Text = string.Format("no gCode ");
+                else
+                {
+                    
+                    mouseCursorDisplayControl.Text = string.Format("gCode " + gCodeCmd.ToString());
+
+                } //*/
+
+            }
+            // /fmfcd
             // test the buttons, we only care about left and right at the moment
             if (e.Button == MouseButtons.Left) leftButtonDown = true;
             else if (e.Button == MouseButtons.Right) rightButtonDown = true;
@@ -920,6 +983,7 @@ namespace LineGrinder
             lastMouseDownPosition.X = e.X;
             lastMouseDownPosition.Y = e.Y;
             workingOriginAtMouseDown = workingOrigin;
+            
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -942,41 +1006,18 @@ namespace LineGrinder
         }
 
         Point MouseToWorld(Point location)
-        {
-            return new Point(0, 0);
-            // this was an attempt to have the actual gerber/gcode coords display in the 
-            // bottom right of the main form. Never could get it to work and so backed it out
-            //if(lastTransformMatrix!=null)
-            //{
-            //    Point[] ptArray = new Point[3];
-            //    ptArray[0] = location;
-            //    //ptArray[0] = new Point(location.X * (int)IsoPlotPointsPerAppUnit, location.Y* (int)IsoPlotPointsPerAppUnit);
-            //    ptArray[1] = new Point(0, 0);
-            //    ptArray[2] = new Point(100,100);
-            //    lastTransformMatrix.TransformPoints(ptArray);
+        {            
+            // trouver l'origine du gerber
+            //Point pObject = new Point(location.X, panel1.Height - (location.Y));
+            Point[] tPoint = { location };            
+            viewportMatrix.TransformPoints(tPoint);
+            Point pObject = tPoint[0];                        
 
-            //    //return new Point(ptArray[1].X, ptArray[1].Y);
-
-
-            //    total crap in here
-            //    // the zero in here just re-inforces that we are offsetting from the (0,0) plot position
-            //    //double xOrigin = (ptArray[0].X * IsoPlotPointsPerAppUnit) - ptArray[1].X;
-            //    //double yOrigin = (ptArray[0].Y * IsoPlotPointsPerAppUnit) - ptArray[1].Y;
-            //    //double xOrigin = (ptArray[0].X ) - ptArray[1].X;
-            //    // double yOrigin = (ptArray[0].Y ) - ptArray[1].Y;
-
-            //    DebugMessage(ptArray[0].X.ToString() + " " + ptArray[1].X + " " + ptArray[2].X);
-            //    int real_X = ptArray[0].X - ptArray[1].X;
-            //    int scale_X = ptArray[2].X - ptArray[1].X;
-            //    int xOrigin = (real_X * 100) / scale_X;
-            //    int yOrigin = ptArray[0].Y;
-
-            //    return new Point((int)xOrigin, (int)yOrigin);
-            //}
-            //else return new Point(location.X, location.Y);
-
-            ////return new Point((int)((float)(location.X) / pageScale - xformPoint.X + 0.5F),
-            ////        (int)((float)(location.Y) / pageScale - xformPoint.Y + 0.5F));
+            // fmfcd debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
+            return pObject;
+         
+                
+            
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -985,12 +1026,12 @@ namespace LineGrinder
         /// </summary>
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
-            //if(mouseCursorDisplayControl != null)
-            //{
-            //    Point convertedPoint = MouseToWorld(Cursor.Position);
+            if(mouseCursorDisplayControl != null)
+            {
+                Point convertedPoint = MouseToWorld(e.Location);  // fmfcd et pas Cursor
 
-            //    mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1}", convertedPoint.X, convertedPoint.Y);
-            //}
+                mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1}", convertedPoint.X, convertedPoint.Y);
+            }
 
             PointF tmpOrigin = new PointF();
             if (panningActive == true)
@@ -1008,7 +1049,7 @@ namespace LineGrinder
                     try
                     {
                         tmpOrigin.X = workingOriginAtMouseDown.X - (lastMouseDownPosition.X - e.X);
-                        DebugMessage("tmpOrigin.X=" + tmpOrigin.X.ToString() + " workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + hScrollBar1.Value.ToString() + " hScrollBar1.Minimum=" + hScrollBar1.Minimum.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
+                        //DebugMessage("tmpOrigin.X=" + tmpOrigin.X.ToString() + " workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + hScrollBar1.Value.ToString() + " hScrollBar1.Minimum=" + hScrollBar1.Minimum.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
 
                         if (tmpOrigin.X < ((hScrollBar1.Maximum - hScrollBar1.LargeChange) * -1))
                         {
@@ -1430,6 +1471,10 @@ namespace LineGrinder
         private void DrawOrigin(Graphics graphicsObj, Pen originPen)
         {
             const float ORIGIN_CROSSHAIR_LEN = 10;
+            //graphicsObj.Transform.Reset();  // !!!! y en 0
+            
+            viewportMatrix = graphicsObj.Transform.Clone();  // matrice de transformation unit -> display
+            viewportMatrix.Invert();
 
             if (ShowOrigin == false) return;
             if (graphicsObj == null) return;
@@ -1445,7 +1490,6 @@ namespace LineGrinder
             // the zero in here just re-inforces that we are offsetting from the (0,0) plot position
             double xOrigin = 0 + Math.Round((plotXOriginLocation * IsoPlotPointsPerAppUnit)); ;
             double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;
-
          //   DebugMessage("xOrigin = " + xOrigin.ToString() + " xScreenScale=" + xScreenScale.ToString());
 
             Point startPointX = new Point(((int)xOrigin)+(xLineLen * -1), (int)yOrigin);

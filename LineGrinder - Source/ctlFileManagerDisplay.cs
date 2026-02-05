@@ -505,6 +505,7 @@ namespace LineGrinder
             bool excellonROState = false;
             bool ignorePadROState = false;
             bool ignoreDrillROState = false;
+            bool intOutlineState = false;
             //      bool textLabelROState = false;
 
             if (optObject == null) return;
@@ -593,7 +594,8 @@ namespace LineGrinder
             SetPropertyBrowsableState(optObject, "IgnoreFillAreas", ignoreFillState);
             SetPropertyBrowsableState(optObject, "IsoPadTouchDownZLevel", isoCutROState);
             SetPropertyBrowsableState(optObject, "IsoCutGCodeEnabled", isoCutROState);
-
+            SetPropertyBrowsableState(optObject, "IntOutline", intOutlineState);
+            
             // edge mill
             SetPropertyBrowsableState(optObject, "EdgeMillGCodeFileOutputExtension", edgeMillROState);
             SetPropertyBrowsableState(optObject, "EdgeMillZCutLevel", edgeMillROState);

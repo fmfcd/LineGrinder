@@ -108,6 +108,8 @@ namespace LineGrinder
 
         // this is the pen we use to plot the gcode line centercuts
         private Pen plotCutLinePen = ApplicationColorManager.DEFAULT_GCODEPLOT_CUTLINE_PEN;
+        // this is the pen we use to plot the gcode lines
+        private Pen selectPen = ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN;
 
         // this plotBrush should be the same colour as the plotLineColor
         public Brush plotBorderBrush = ApplicationColorManager.DEFAULT_GCODEPLOTBORDER_BRUSH;
@@ -115,6 +117,7 @@ namespace LineGrinder
         // this value is are maintained by the plot control and filled in prior to drawing
         private float isoPlotPointsPerAppUnit = ApplicationImplicitSettings.DEFAULT_VIRTURALCOORD_PER_INCH;
 
+        
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Constructor
@@ -391,7 +394,21 @@ namespace LineGrinder
                 plotBorderPen = value;
             }
         }
-
+        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+        /// <summary>
+        /// Gets/Sets the select line pen. fmfcd
+        /// </summary>
+        public Pen PlotSelectPen
+        {
+            get
+            {
+                return selectPen;
+            }
+            set
+            {
+                selectPen = value;
+            }
+        }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Gets/Sets the cut line pen.
