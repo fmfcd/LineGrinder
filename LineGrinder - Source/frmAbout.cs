@@ -83,7 +83,10 @@ namespace LineGrinder
             Process.Start(sInfo);
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
 

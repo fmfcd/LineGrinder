@@ -58,7 +58,6 @@ namespace LineGrinder
             this.radioButtonMainViewEdgeMillGCode = new System.Windows.Forms.RadioButton();
             this.radioButtonIsoPlotStep1 = new System.Windows.Forms.RadioButton();
             this.radioButtonMainViewGerberPlot = new System.Windows.Forms.RadioButton();
-            this.ctlPlotViewer1 = new LineGrinder.ctlPlotViewer();
             this.tabPageGerberCode = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxOpenGerberFileName = new System.Windows.Forms.TextBox();
@@ -113,7 +112,6 @@ namespace LineGrinder
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxFileManagerTitle = new System.Windows.Forms.TextBox();
             this.textBoxFileManagerHeader = new System.Windows.Forms.TextBox();
-            this.ctlFileManagersDisplay1 = new LineGrinder.ctlFileManagersDisplay();
             this.buttonSaveConfiguration = new System.Windows.Forms.Button();
             this.buttonOpenFile = new System.Windows.Forms.Button();
             this.buttonRecentFiles = new System.Windows.Forms.Button();
@@ -136,6 +134,8 @@ namespace LineGrinder
             this.textBoxMouseCursorDisplay = new System.Windows.Forms.TextBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.buttonSupGcode = new System.Windows.Forms.Button();
+            this.ctlPlotViewer1 = new LineGrinder.ctlPlotViewer();
+            this.ctlFileManagersDisplay1 = new LineGrinder.ctlFileManagersDisplay();
             this.tabControl1.SuspendLayout();
             this.tabPagePlot.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -518,18 +518,6 @@ namespace LineGrinder
             this.radioButtonMainViewGerberPlot.Text = "Gerber Plot";
             this.radioButtonMainViewGerberPlot.UseVisualStyleBackColor = true;
             this.radioButtonMainViewGerberPlot.CheckedChanged += new System.EventHandler(this.radioButtonMainViewGerberPlot_CheckedChanged);
-            // 
-            // ctlPlotViewer1
-            // 
-            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctlPlotViewer1.Location = new System.Drawing.Point(200, 3);
-            this.ctlPlotViewer1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
-            this.ctlPlotViewer1.Size = new System.Drawing.Size(1234, 908);
-            this.ctlPlotViewer1.TabIndex = 2;
-            this.ctlPlotViewer1.Load += new System.EventHandler(this.ctlPlotViewer1_Load);
             // 
             // tabPageGerberCode
             // 
@@ -1223,18 +1211,6 @@ namespace LineGrinder
             this.textBoxFileManagerHeader.Text = resources.GetString("textBoxFileManagerHeader.Text");
             this.textBoxFileManagerHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // ctlFileManagersDisplay1
-            // 
-            this.ctlFileManagersDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctlFileManagersDisplay1.Location = new System.Drawing.Point(6, 155);
-            this.ctlFileManagersDisplay1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ctlFileManagersDisplay1.Name = "ctlFileManagersDisplay1";
-            this.ctlFileManagersDisplay1.Size = new System.Drawing.Size(1095, 748);
-            this.ctlFileManagersDisplay1.TabIndex = 6;
-            this.ctlFileManagersDisplay1.Load += new System.EventHandler(this.ctlFileManagersDisplay1_Load);
-            // 
             // buttonSaveConfiguration
             // 
             this.buttonSaveConfiguration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1318,21 +1294,10 @@ namespace LineGrinder
             this.buttonClearAll.Text = "Clear A&ll...";
             this.buttonClearAll.UseVisualStyleBackColor = true;
             this.buttonClearAll.Click += new System.EventHandler(this.buttonClearAll_Click);
-// 
-            // buttonSupGcode
-            // 
-	        this.buttonSupGcode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSupGcode.Location = new System.Drawing.Point(1461, 767);
-            this.buttonSupGcode.Name = "buttonSupGcode";
-            this.buttonSupGcode.Size = new System.Drawing.Size(222, 31);
-            this.buttonSupGcode.TabIndex = 22;
-            this.buttonSupGcode.Text = "Sup Gcode";
-            this.buttonSupGcode.UseVisualStyleBackColor = true;
-            this.buttonSupGcode.Click += new System.EventHandler(this.buttonSupprimeGCode_Click);
             // 
             // buttonExit
             // 
-            this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));            
+            this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExit.Location = new System.Drawing.Point(1461, 923);
             this.buttonExit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonExit.Name = "buttonExit";
@@ -1484,7 +1449,41 @@ namespace LineGrinder
             this.textBoxMouseCursorDisplay.ReadOnly = true;
             this.textBoxMouseCursorDisplay.Size = new System.Drawing.Size(522, 26);
             this.textBoxMouseCursorDisplay.TabIndex = 34;
-            
+            // 
+            // buttonSupGcode
+            // 
+            this.buttonSupGcode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSupGcode.Location = new System.Drawing.Point(1461, 767);
+            this.buttonSupGcode.Name = "buttonSupGcode";
+            this.buttonSupGcode.Size = new System.Drawing.Size(222, 31);
+            this.buttonSupGcode.TabIndex = 22;
+            this.buttonSupGcode.Text = "Sup Gcode";
+            this.buttonSupGcode.UseVisualStyleBackColor = true;
+            this.buttonSupGcode.Click += new System.EventHandler(this.buttonSupprimeGCode_Click);
+            // 
+            // ctlPlotViewer1
+            // 
+            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctlPlotViewer1.Location = new System.Drawing.Point(200, 3);
+            this.ctlPlotViewer1.Margin = new System.Windows.Forms.Padding(5, 8, 6, 8);
+            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
+            this.ctlPlotViewer1.Size = new System.Drawing.Size(1234, 908);
+            this.ctlPlotViewer1.TabIndex = 2;
+            this.ctlPlotViewer1.Load += new System.EventHandler(this.ctlPlotViewer1_Load);
+            // 
+            // ctlFileManagersDisplay1
+            // 
+            this.ctlFileManagersDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctlFileManagersDisplay1.Location = new System.Drawing.Point(6, 155);
+            this.ctlFileManagersDisplay1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ctlFileManagersDisplay1.Name = "ctlFileManagersDisplay1";
+            this.ctlFileManagersDisplay1.Size = new System.Drawing.Size(1095, 748);
+            this.ctlFileManagersDisplay1.TabIndex = 6;
+            this.ctlFileManagersDisplay1.Load += new System.EventHandler(this.ctlFileManagersDisplay1_Load);
             // 
             // frmMain1
             // 

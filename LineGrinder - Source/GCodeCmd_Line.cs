@@ -41,6 +41,9 @@ namespace LineGrinder
         public int X1 { get => x1; set => x1 = value; }  // fmfcd
         public int Y1 { get => y1; set => y1 = value; }  // fmfcd
 
+        public int MX { get => (x0 + x1)/2; }  // fmfcd
+        public int MY { get => (y0 + y1) / 2; }  //fmfcd
+
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Constructor

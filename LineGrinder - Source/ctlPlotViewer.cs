@@ -918,16 +918,24 @@ namespace LineGrinder
             {
                 int index = gcodeFileToDisplay.SourceLines.FindIndex(  g => {
                     // predicate
-
+                    // TODO à placer dans GCodeCmd, GCodeCmd_Line et GCodeCmd_Arc
+                    int dRec = 10; // zone de recherche carré
                     if (g.GetType() == typeof(GCodeCmd_Line))
                     {
-                        if ((Math.Abs(((GCodeCmd_Line)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Line)g).Y0 - convertedPoint.Y) < 50))
+                        if ((Math.Abs(((GCodeCmd_Line)g).X0 - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Line)g).Y0 - convertedPoint.Y) < dRec))
+                            return true;
+                        if ((Math.Abs(((GCodeCmd_Line)g).X1 - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Line)g).Y1 - convertedPoint.Y) < dRec))
+                            return true;
+                        if ((Math.Abs(((GCodeCmd_Line)g).MX - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Line)g).MY - convertedPoint.Y) < dRec))
                             return true;
                     }
                     else if (g.GetType() == typeof(GCodeCmd_Arc))
                     {
-                        if ((Math.Abs(((GCodeCmd_Arc)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Arc)g).Y0 - convertedPoint.Y) < 50))
+                        if ((Math.Abs(((GCodeCmd_Arc)g).X0 - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Arc)g).Y0 - convertedPoint.Y) < dRec))
                             return true;
+                        if ((Math.Abs(((GCodeCmd_Arc)g).X1 - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Arc)g).Y1 - convertedPoint.Y) < dRec))
+                            return true;
+                        
                     }
 
                     return false;
@@ -940,9 +948,15 @@ namespace LineGrinder
                     GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines[index];
                     string sgCodeCmd= gCodeCmd.GetGCodeCmd( gcodeFileToDisplay.StateMachine);
                     mouseCursorDisplayControl.Text = string.Format("index" + index + " gCode " + sgCodeCmd);
-                     // en 2 étapes : sélection puis suppression souligner la ligne sélectionner en rouge
-                    if (!gcodeFileToDisplay.listeIndexSelection.Contains(index))  // si pas déjà dans la liste
+                    // en 2 étapes : sélection puis suppression souligner la ligne sélectionner en rouge
+                    int iSelect = gcodeFileToDisplay.listeIndexSelection.FindIndex(i => i == index);
+                    //if (!gcodeFileToDisplay.listeIndexSelection.Contains(index))  // si pas déjà dans la liste
+                    if (iSelect == -1)
                         gcodeFileToDisplay.listeIndexSelection.Add(index); // ajouter aux éléments sélectionné                    
+                    else
+                    {
+                        gcodeFileToDisplay.listeIndexSelection.RemoveAt(iSelect);  // enlever de la sélection
+                    }
                     Invalidate();
 
                 }
@@ -1014,9 +1028,7 @@ namespace LineGrinder
             Point pObject = tPoint[0];                        
 
             // fmfcd debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
-            return pObject;
-         
-                
+            return pObject;               
             
         }
 
@@ -1308,31 +1320,23 @@ namespace LineGrinder
             //Configure the horizontal scrollbar
             if (this.hScrollBar1.Visible)
             {
-                // calc the number of pixels of our virtual plot would use
+                // calc the number of pixels of our virtual plot would use  // même pbm que pour MouseToWorld
                 // on the screen if it were possible to make it fully visible
                 int virtualScreenWidthInScreenPixels = (int)((((float)this.virtualScreenSize.Width) * DotsPerAppUnitX * MagnificationLevel) / isoPlotPointsPerAppUnit);
-                
+                // BUG2026_1 -> provisoirement plus de scrollbar
                 // set these. The Large Change will be the width of our scroll thumb
-                workingSmallChange = virtualScreenWidthInScreenPixels / 20;
-                workingLargeChange = virtualScreenWidthInScreenPixels / 10;
+                workingSmallChange = virtualScreenWidthInScreenPixels / 20; 
+                workingLargeChange = virtualScreenWidthInScreenPixels / 10;  
 
-/*
-                DebugMessage("");
-                DebugMessage("SetScrollBarMaxMinLimits()");
-                DebugMessage("xvirtualScreenSize.Width=" + virtualScreenSize.Width.ToString());
-                DebugMessage("xdpiX=" + dpiX.ToString());
-                DebugMessage("xMagnificationLevel=" + MagnificationLevel.ToString());
-                DebugMessage("xisoPlotPointsPerAppUnit=" + isoPlotPointsPerAppUnit.ToString());
-                DebugMessage("xworkingLargeChange=" + workingLargeChange.ToString());
-                DebugMessage("xpanel1.ClientSize.Width=" + panel1.ClientSize.Width.ToString());
-                DebugMessage("xvScrollBar1.Width=" + vScrollBar1.Width.ToString());
-*/
-                // calculate the working scrollbar maximum
+                
+                // calculate the working scrollbar maximum fmfcd
+                //before // int workingMaximum = virtualScreenWidthInScreenPixels + workingLargeChange - (panel1.ClientSize.Width - vScrollBar1.Width);
+                // fmfcd
                 int workingMaximum = virtualScreenWidthInScreenPixels + workingLargeChange - (panel1.ClientSize.Width - vScrollBar1.Width);
 //                DebugMessage("workingMaximum=" + workingMaximum.ToString());
                 // is our current virtualScreenWidthInScreenPixels less than the 
                 // actual panel+compensation factors? It is if the working maximum is less than zero
-                if (workingMaximum <= workingLargeChange)
+//               if (workingMaximum <= workingLargeChange)
                 {
 //                    DebugMessage("noscroll mode");
                     // the virtualScreenWidthInScreenPixels is less than the screen size, we set defaults
@@ -1345,7 +1349,7 @@ namespace LineGrinder
                     hScrollBar1.Value = 0;
                     hScrollBar1.Tag = (panel1.ClientSize.Width - vScrollBar1.Width - virtualScreenWidthInScreenPixels)/2;
                 }
-                else
+                /*else
                 {
     //                DebugMessage("scroll mode");
                     hScrollBar1.Minimum = 0;
@@ -1353,18 +1357,10 @@ namespace LineGrinder
                     hScrollBar1.SmallChange = workingSmallChange;
                     hScrollBar1.LargeChange = workingLargeChange;
                     //TODO set the value now
-                }
-/*                
-                DebugMessage(" virtualScreenWidthInScreenPixels=" + virtualScreenWidthInScreenPixels.ToString());
-                DebugMessage("vScrollBar1.Width=" + vScrollBar1.Width.ToString());
-                DebugMessage("MagnificationLevel=" + MagnificationLevel.ToString());
-                DebugMessage("panel1.ClientSize.Width=" + panel1.ClientSize.Width.ToString());
-                DebugMessage("virtualScreenSize.Width=" + virtualScreenSize.Width.ToString());
-                DebugMessage("hScrollBar1.SmallChange=" + hScrollBar1.SmallChange.ToString());
-                DebugMessage("hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
-                DebugMessage("hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString());
-                DebugMessage("");
- */
+                    hScrollBar1.Value = 1;
+                    hScrollBar1.Tag = (panel1.ClientSize.Width - vScrollBar1.Width - virtualScreenWidthInScreenPixels)/2;
+                }*/
+
             }
 
             //Configure the vertical scrollbar
@@ -1377,20 +1373,13 @@ namespace LineGrinder
                 // set these. The Large Change will be the width of our scroll thumb
                 workingSmallChange = virtualScreenHeightInScreenPixels / 20;
                 workingLargeChange = virtualScreenHeightInScreenPixels / 10;
-                /*
-                DebugMessage("");
-                DebugMessage("SetScrollBarMaxMinLimits()");
-                DebugMessage("virtualScreenSize.Height=" + virtualScreenSize.Height.ToString());
-                DebugMessage("workingSmallChange=" + workingSmallChange.ToString());
-                DebugMessage("workingLargeChange=" + workingLargeChange.ToString());
-                 */
-
+         
                 // calculate the working scrollbar maximum
                 int workingMaximum = virtualScreenHeightInScreenPixels + workingLargeChange - (panel1.ClientSize.Height - hScrollBar1.Height);
                 //DebugMessage("workingMaximum=" + workingMaximum.ToString());
                 // is our current virtualScreenHeightInScreenPixels less than the 
                 // actual panel+compensation factors? It is if the working maximum is less than zero
-                if (workingMaximum <= workingLargeChange)
+            //    if (workingMaximum <= workingLargeChange)*/
                 {
                    // DebugMessage("noscroll mode");
                     // the virtualScreenHeightInScreenPixels is less than the screen size, we set defaults
@@ -1403,26 +1392,18 @@ namespace LineGrinder
                     vScrollBar1.Value = 0;
                     vScrollBar1.Tag = (panel1.ClientSize.Height - hScrollBar1.Height - virtualScreenHeightInScreenPixels) / 2;
                 }
-                else
+              /* else
                 {
                     //DebugMessage("scroll mode");
                     vScrollBar1.Minimum = 0;
                     vScrollBar1.Maximum = workingMaximum;
                     vScrollBar1.SmallChange = workingSmallChange;
                     vScrollBar1.LargeChange = workingLargeChange;
-                    //TODO set the value now
+                    //TODO set the value nowv
+                    vScrollBar1.Value = 1;
+                    vScrollBar1.Tag = (panel1.ClientSize.Height - hScrollBar1.Height - virtualScreenHeightInScreenPixels) / 2;
                 }
-                /*
-                DebugMessage(" virtualScreenHeightInScreenPixels=" + virtualScreenHeightInScreenPixels.ToString());
-                DebugMessage("hScrollBar1.Height=" + hScrollBar1.Height.ToString());
-                DebugMessage("MagnificationLevel=" + MagnificationLevel.ToString());
-                DebugMessage("panel1.ClientSize.Height=" + panel1.ClientSize.Height.ToString());
-                DebugMessage("virtualScreenSize.Height=" + virtualScreenSize.Height.ToString());
-                DebugMessage("vScrollBar1.SmallChange=" + vScrollBar1.SmallChange.ToString());
-                DebugMessage("vScrollBar1.LargeChange=" + vScrollBar1.LargeChange.ToString());
-                DebugMessage("vScrollBar1.Maximum=" + vScrollBar1.Maximum.ToString());
-                DebugMessage("");
-                 */
+               */
             }
 
             SyncCurrentOriginToScrollBarSliderPositions();
