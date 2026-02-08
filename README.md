@@ -2,7 +2,7 @@
 I made some modifications for simpler engraving of my PCBs in Gerber format.
 Line Grinder can generate isolation routing GCode from the Gerber format plot files output by most PCB design programs. The GCode Line Grinder produces, if run sequentially, should also provide a method for reliably producing nicely aligned, double sided isolation routed PCBs including the cutting of border outlines and the drilling of pad holes and vias. It is intended to be a one-stop-shop GCode generator and methodology which will produce consistent results when cutting circuit boards. 
 
-### Latest Version: 03.10 as of 5 Feb 2026
+### Latest Version: 03.210 as of 8 Feb 2026
 
 ### Home Page and Compiled Binary
 The home page for this project can be found at [http://www.OfItselfSo.com/LineGrinder/LineGrinder.php](http://www.OfItselfSo.com/LineGrinder/LineGrinder.php). For me, a facility for engrave with CNC with a unique interior track!.
@@ -20,6 +20,7 @@ My home page : [https://www.fmfcd.eu]
     * Is extremely configurable with a variety of options to control cutting depths and toolhead speeds for each of the various types of output GCode.
     * Runs on Windows 10 or higher.
     * The software was written in C# and a Visual Studio 2019 solution and project are included with the source code. 
+    * Can suppress GCode in isolation gcode.
 
 ## Tutorial Videos
 Tutorial Videos are available on the OfItselfSo YouTube channel at: [https://www.youtube.com/@ofitselfso](https://www.youtube.com/@ofitselfso)
