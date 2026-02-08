@@ -56,7 +56,7 @@ namespace LineGrinder
         private const int MAX_POCKETING_PASSES = 1000;
 
         // selection de ligne source Gcode fmfcd
-        public List<int> listeIndexSelection = new List<int>();  // passer en proprité ?
+        public List<int> listeIndexSelection = new List<int>();  // passer en propriété ?
 
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=

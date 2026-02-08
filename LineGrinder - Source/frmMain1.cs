@@ -56,16 +56,16 @@ namespace LineGrinder
         private const string LINEGRINDER_HELPDIR = "Help";
 
         // app constants
-        private const string APPLICATION_NAME = "Line Grinder";
-        private const string APPLICATION_VERSION = "03.10";
-        private const string APPLICATION_HOME = @"http://www.OfItselfSo.com/LineGrinder/LineGrinder.php";
+        private const string APPLICATION_NAME = "Line Grinder fmfcd";
+        private const string APPLICATION_VERSION = "03.20";
+        private const string APPLICATION_HOME = @"https://www.fmfcd.eu/line-grinder-fmfcd-eu";
 
-        private const string WARN01="The Line Grinder software is released under the MIT License. There";
+        private const string WARN01="The Line Grinder fmfcd software is released under the MIT License. There";
         private const string WARN02="is no warranty or guarantee that the GCode files it produces";
         private const string WARN03="are without error. You use it, and run its output code entirely";
         private const string WARN04="at your own risk. In particular: ";
         private const string WARN05="";
-        private const string WARN06="THE LINE GRINDER SOFTWARE, AND THE OUTPUT CODE IT GENERATES, ARE ";
+        private const string WARN06="THE LINE GRINDER FMFCD SOFTWARE, AND THE OUTPUT CODE IT GENERATES, ARE ";
         private const string WARN07="PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR ";
         private const string WARN08="IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF ";
         private const string WARN09="MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND ";
@@ -582,8 +582,7 @@ namespace LineGrinder
         /// </summary>
         private void buttonMagnification100_Click(object sender, EventArgs e)
         {
-            ctlPlotViewer1.MagnificationLevel = ctlPlotViewer.DEFAULT_MAGNIFICATION_LEVEL;
-            ctlPlotViewer1.SetScrollBarMaxMinLimits();
+            ctlPlotViewer1.MagnificationLevel = ctlPlotViewer.DEFAULT_MAGNIFICATION_LEVEL;            
             ctlPlotViewer1.Invalidate();
             SyncMagnificationOnScreenToPlotViewer();
         }
@@ -622,7 +621,7 @@ namespace LineGrinder
             float currentManification = ConvertDisplayStringMagnificationToFloat(comboboxText);
             if (currentManification <= 0) currentManification = ctlPlotViewer.DEFAULT_MAGNIFICATION_LEVEL;
             ctlPlotViewer1.MagnificationLevel = currentManification;
-            ctlPlotViewer1.SetScrollBarMaxMinLimits();
+            
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -3137,7 +3136,7 @@ namespace LineGrinder
                 ctlPlotViewer1.GcodeOriginAtCenter = CurrentExcellonFile.GCodeOriginAtCenter;
                 ctlPlotViewer1.SetPlotObjectLimits(0, 0, CurrentExcellonFile.MaxPlotXCoord, CurrentExcellonFile.MaxPlotYCoord, CurrentExcellonFile.MidPlotXCoord, CurrentExcellonFile.MidPlotYCoord);
                 ctlPlotViewer1.MagnificationLevel = ctlPlotViewer.DEFAULT_MAGNIFICATION_LEVEL;
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
+             
                 ctlPlotViewer1.ShowPlot();
 
                 // now set screen display
@@ -3184,7 +3183,7 @@ namespace LineGrinder
                 ctlPlotViewer1.IsoPlotPointsPerAppUnit = GetIsoPlotPointsPerAppUnit(CurrentGerberFile.GerberFileUnits);
                 ctlPlotViewer1.GcodeOriginAtCenter = outputGerberFile.GCodeOriginAtCenter;
                 ctlPlotViewer1.SetPlotObjectLimits(0, 0, outputGerberFile.MaxPlotXCoord, outputGerberFile.MaxPlotYCoord, outputGerberFile.MidPlotXCoord, outputGerberFile.MidPlotYCoord);                
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
+                
                 ctlPlotViewer1.ShowPlot();
 
                 // now set screen display
@@ -3194,7 +3193,7 @@ namespace LineGrinder
                 textBoxOpenGerberFileName.Text = filePathAndName;
                 SetStatusLine(Path.GetFileName(filePathAndName));
                 SyncFormVisualsToGerberExcellonAndGCodeState();
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
+                
 
                 // set the settings enabled state
                 SyncSettingsEnabledStateToReality(); 
@@ -3380,7 +3379,7 @@ namespace LineGrinder
                 ctlPlotViewer1.IsoPlotPointsPerAppUnit = GetIsoPlotPointsPerAppUnit(CurrentExcellonFile.ExcellonFileUnits);
                 ctlPlotViewer1.GcodeOriginAtCenter = CurrentExcellonFile.GCodeOriginAtCenter;
                 ctlPlotViewer1.SetPlotObjectLimits(0, 0, CurrentExcellonFile.MaxPlotXCoord, CurrentExcellonFile.MaxPlotYCoord, CurrentExcellonFile.MidPlotXCoord, CurrentExcellonFile.MidPlotYCoord);
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
+                
                 ctlPlotViewer1.ShowPlot();
 
                 // now set screen display
@@ -3421,7 +3420,7 @@ namespace LineGrinder
                 ctlPlotViewer1.IsoPlotPointsPerAppUnit = GetIsoPlotPointsPerAppUnit(CurrentGerberFile.GerberFileUnits);
                 ctlPlotViewer1.GcodeOriginAtCenter = outputGerberFile.GCodeOriginAtCenter;
                 ctlPlotViewer1.SetPlotObjectLimits(0, 0, outputGerberFile.MaxPlotXCoord, outputGerberFile.MaxPlotYCoord, outputGerberFile.MidPlotXCoord, outputGerberFile.MidPlotYCoord);
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
+               
                 ctlPlotViewer1.ShowPlot();
 
                 // now set screen display
@@ -3431,8 +3430,7 @@ namespace LineGrinder
                 textBoxOpenGerberFileName.Text = filePathAndName;
                 SetStatusLine(Path.GetFileName(filePathAndName));
                 SyncFormVisualsToGerberExcellonAndGCodeState();
-                ctlPlotViewer1.SetScrollBarMaxMinLimits();
-
+                
                 // say all is well
 #if !DEBUG
                 //OISMessageBox("The Gerber file opened successfully.");
@@ -3445,6 +3443,7 @@ namespace LineGrinder
             if (ctlPlotViewer1.GCodeFileToDisplay != null)
             {
                 ctlPlotViewer1.GCodeFileToDisplay.supSelectLineSource();
+                ctlPlotViewer1.noAction();
                 ctlPlotViewer1.Invalidate();
                 CurrentIsolationGCodeFile = ctlPlotViewer1.GCodeFileToDisplay;
                 richTextBoxIsolationGCode.Text = CurrentIsolationGCodeFile.GetGCodeCmdsAsText().ToString();
@@ -3922,15 +3921,10 @@ namespace LineGrinder
         /// </summary>
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-#if DEBUG
-            LogMessage(" buttonHelp_Click");
-            ResetApplicationForNewConvertToGCode();
-            //LaunchHelpFile(@"C:\Projects\LineGrinder\Help", LINEGRINDER_MAINHELP_FILE);
-#else
-            LogMessage(" buttonHelp_Click");
-            LaunchHelpFile(LINEGRINDER_HELPDIR, LINEGRINDER_MAINHELP_FILE);
-#endif
 
+            //LaunchHelpFile(LINEGRINDER_HELPDIR, LINEGRINDER_MAINHELP_FILE);
+            // fmfcd
+            OISMessageBox(" voir : \n\t https://www.fmfcd.eu/line-grinder-fmfcd-eu/ \n \n et l'original :\n\t https://www.ofitselfso.com/LineGrinder/LineGrinder.php ");
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=

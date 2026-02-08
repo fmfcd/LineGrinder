@@ -38,6 +38,10 @@ namespace LineGrinder
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBoxLicense = new System.Windows.Forms.RichTextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +76,7 @@ namespace LineGrinder
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(243, 125);
+            this.linkLabel1.Location = new System.Drawing.Point(403, 86);
             this.linkLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(156, 20);
@@ -84,17 +88,17 @@ namespace LineGrinder
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(224, 103);
+            this.label2.Location = new System.Drawing.Point(134, 86);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(215, 20);
+            this.label2.Size = new System.Drawing.Size(259, 20);
             this.label2.TabIndex = 13;
-            this.label2.Text = "The Line Grinder Home Page";
+            this.label2.Text = "The Line Grinder fmfcd Home Page";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(224, 166);
+            this.label3.Location = new System.Drawing.Point(155, 165);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 20);
@@ -105,7 +109,7 @@ namespace LineGrinder
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(243, 188);
+            this.linkLabel2.Location = new System.Drawing.Point(174, 187);
             this.linkLabel2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(266, 20);
@@ -117,19 +121,20 @@ namespace LineGrinder
             // pictureBox1
             // 
             this.pictureBox1.Image = global::LineGrinder.Properties.Resources.gear;
-            this.pictureBox1.Location = new System.Drawing.Point(118, 105);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 102);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(96, 98);
             this.pictureBox1.TabIndex = 16;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.Control;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(28, 55);
+            this.textBox2.Location = new System.Drawing.Point(29, 44);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
@@ -145,9 +150,9 @@ namespace LineGrinder
             this.label1.Location = new System.Drawing.Point(36, 231);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(523, 20);
+            this.label1.Size = new System.Drawing.Size(567, 20);
             this.label1.TabIndex = 18;
-            this.label1.Text = "The Line Grinder software is released under the terms of the MIT License";
+            this.label1.Text = "The Line Grinder fmfcd software is released under the terms of the MIT License";
             // 
             // richTextBoxLicense
             // 
@@ -161,6 +166,51 @@ namespace LineGrinder
             this.richTextBoxLicense.Size = new System.Drawing.Size(727, 229);
             this.richTextBoxLicense.TabIndex = 1;
             this.richTextBoxLicense.Text = "";
+            this.richTextBoxLicense.TextChanged += new System.EventHandler(this.richTextBoxLicense_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(134, 121);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(158, 20);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Original home page : ";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(459, 187);
+            this.linkLabel3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(298, 20);
+            this.linkLabel3.TabIndex = 20;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "https://github.com/OfItselfSo/LineGrinder";
+            // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.Location = new System.Drawing.Point(329, 121);
+            this.linkLabel4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(397, 20);
+            this.linkLabel4.TabIndex = 21;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "https://www.ofitselfso.com/LineGrinder/LineGrinder.php";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(459, 165);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(130, 20);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "Original Git hub : ";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // frmAbout
             // 
@@ -168,6 +218,10 @@ namespace LineGrinder
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(808, 552);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.linkLabel4);
+            this.Controls.Add(this.linkLabel3);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.richTextBoxLicense);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
@@ -205,6 +259,10 @@ namespace LineGrinder
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBoxLicense;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.Label label5;
     }
 }
 

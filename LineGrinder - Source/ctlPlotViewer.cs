@@ -1,38 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
-using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using OISCommon;
-
-/// +------------------------------------------------------------------------------------------------------------------------------+
-/// ¦                                                   TERMS OF USE: MIT License                                                  ¦
-/// +------------------------------------------------------------------------------------------------------------------------------¦
-/// ¦Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation    ¦
-/// ¦files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,    ¦
-/// ¦modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software¦
-/// ¦is furnished to do so, subject to the following conditions:                                                                   ¦
-/// ¦                                                                                                                              ¦
-/// ¦The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.¦
-/// ¦                                                                                                                              ¦
-/// ¦THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE          ¦
-/// ¦WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR         ¦
-/// ¦COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,   ¦
-/// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
-/// +------------------------------------------------------------------------------------------------------------------------------+
 
 namespace LineGrinder
 {
-    /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-    /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-    /// <summary>
-    /// A control to graphically display Gerber and G-code files
-    /// </summary>
-    public partial class ctlPlotViewer : ctlOISBase
+    public partial class ctlPlotViewer : UserControl
     {
 
         // this determines the view we use to display the plot
@@ -116,7 +95,7 @@ namespace LineGrinder
         // the DEFAULT_MAGNIFICATION_LEVEL
         public const int DEFAULT_MAGNICATION_LEVEL_INDEX = 6;
         // these are the possible default scale levels, the user can specify values between these manually
-        public static float[] DEFAULT_MAGNIFICATION_LEVELS = {0.25f, 0.33f, 0.50f, 0.66f, 0.75f, 0.87f, 1.00f, 1.25f, 1.50f, 2.00f, 3.00f, 4.00f, 5.00f, 6.00f, 7.00f, 8.00f, 10.00f, 12.00f, 16.00f, 20.00f, 30.00f, 40.00f };
+        public static float[] DEFAULT_MAGNIFICATION_LEVELS = { 0.25f, 0.33f, 0.50f, 0.66f, 0.75f, 0.87f, 1.00f, 1.25f, 1.50f, 2.00f, 3.00f, 4.00f, 5.00f, 6.00f, 7.00f, 8.00f, 10.00f, 12.00f, 16.00f, 20.00f, 30.00f, 40.00f };
         // this is the currently operational level of magnification
         private float magnificationLevel = DEFAULT_MAGNIFICATION_LEVEL;
 
@@ -141,8 +120,13 @@ namespace LineGrinder
         private TextBox mouseCursorDisplayControl = null;
         //private Matrix lastTransformMatrix = null;
 
-
-        
+        // fmfcd selection
+        enum TA_Action { TA_AUCUNE, TA_SELECTION };
+        TA_Action action = TA_Action.TA_AUCUNE;
+        private Point currentMouseMovePosition;
+        // direct graphics
+        BufferedGraphicsContext currentGC;
+        BufferedGraphics buffer;
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
@@ -150,7 +134,9 @@ namespace LineGrinder
         /// </summary>
         public ctlPlotViewer()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -176,6 +162,7 @@ namespace LineGrinder
         /// </summary>
         public new void Invalidate()
         {
+
             base.Invalidate();
             // invalidate every control we possess
             foreach (Control conObj in this.Controls)
@@ -429,7 +416,7 @@ namespace LineGrinder
             maxPlotXCoord = 0;
             maxPlotYCoord = 0;
             workingOrigin = new PointF(0, 0);
-            
+
             magnificationLevel = DEFAULT_MAGNIFICATION_LEVEL;
             plotPadding = new Padding(DEFAULT_PADDING_LEFT, DEFAULT_PADDING_TOP, DEFAULT_PADDING_RIGHT, DEFAULT_PADDING_BOTTOM);
             virtualPlotSize = new Size(DEFAULT_PLOT_WIDTH, DEFAULT_PLOT_HEIGHT);
@@ -439,6 +426,9 @@ namespace LineGrinder
             GCodeFileToDisplay = null;
             workingOrigin.X = 0;
             workingOrigin.Y = 0;
+
+            // fmfcd selection 
+            action = TA_Action.TA_AUCUNE;
             Invalidate();
         }
 
@@ -531,9 +521,9 @@ namespace LineGrinder
         /// </summary>
         public void ShowPlot()
         {
-             // a reset is assumed to have been done prior to this call
+            // a reset is assumed to have been done prior to this call
             SetVirtualPlotSize();
-            SetScrollBarMaxMinLimits();
+
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -612,8 +602,8 @@ namespace LineGrinder
 
             // add on a bit of extra space so the objects with the biggest X or Y 
             // we just add on the DEFAULT_PLOT_PADDING      
-            ySize+= (float)DEFAULT_PLOT_PADDING_TOP;
-            xSize+= (float)DEFAULT_PLOT_PADDING_RIGHT;
+            ySize += (float)DEFAULT_PLOT_PADDING_TOP;
+            xSize += (float)DEFAULT_PLOT_PADDING_RIGHT;
 
             if (xSize <= 0) xSize = DEFAULT_PLOT_WIDTH;
             if (ySize <= 0) ySize = DEFAULT_PLOT_HEIGHT;
@@ -621,8 +611,8 @@ namespace LineGrinder
             virtualPlotSize = new Size((int)xSize, (int)ySize);
             virtualScreenSize = new Size((int)xSize + plotPadding.Left + plotPadding.Right, (int)ySize + plotPadding.Top + plotPadding.Bottom);
 
-            LogMessage("SetVirtualPlotSize: virtualPlotSize: (0,0) " + virtualPlotSize.ToString());
-            LogMessage("SetVirtualPlotSize: virtualScreenSize: (0,0) " + virtualScreenSize.ToString());
+            //  LogMessage("SetVirtualPlotSize: virtualPlotSize: (0,0) " + virtualPlotSize.ToString()); // à enlever
+            //  LogMessage("SetVirtualPlotSize: virtualScreenSize: (0,0) " + virtualScreenSize.ToString()); // à enlever
 
         }
 
@@ -652,14 +642,7 @@ namespace LineGrinder
             return 0;
         }
 
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
-        /// Handles a size change event
-        /// </summary>
-        private void panel1_SizeChanged(object sender, EventArgs e)
-        {
-            SetScrollBarMaxMinLimits();
-        }
+
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
@@ -690,10 +673,10 @@ namespace LineGrinder
             // set the magnification level
             MagnificationLevel = DEFAULT_MAGNIFICATION_LEVELS[currIndex];
             // set the scroll bar
-            SetScrollBarMaxMinLimits();
-            panel1.Invalidate();
 
-    //        DebugMessage("MouseWheel, delta=" + e.Delta.ToString() + " MagnificationLevel=" + MagnificationLevel.ToString());
+            this.Invalidate();
+
+            //        DebugMessage("MouseWheel, delta=" + e.Delta.ToString() + " MagnificationLevel=" + MagnificationLevel.ToString());
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -703,20 +686,96 @@ namespace LineGrinder
         /// </summary>
         public int GetCurrentMagLevelsIndexIntoDefaultMagLevelArray()
         {
-            for (int index = 0; index < DEFAULT_MAGNIFICATION_LEVELS.Count(); index++ )
+            for (int index = 0; index < DEFAULT_MAGNIFICATION_LEVELS.Count(); index++)
             {
                 if (DEFAULT_MAGNIFICATION_LEVELS[index] >= magnificationLevel) return index;
             }
             // not found - just return the last one
-            return DEFAULT_MAGNIFICATION_LEVELS.Count()-1;
+            return DEFAULT_MAGNIFICATION_LEVELS.Count() - 1;
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// Paints the control according to the currently loaded gerber file
         /// </summary>
-        private void panel1_Paint(object sender, PaintEventArgs e)
+
+        protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+            Control_Paint(this, e);
+        }
+        private void Control_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = this.CreateGraphics();
+
+            paint(graphics);
+
+            graphics.Dispose();
+
+            return;
+        }
+        public class GDI
+        {
+
+            [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            internal static extern bool Rectangle(
+               IntPtr hdc,
+               int ulCornerX, int ulCornerY,
+               int lrCornerX, int lrCornerY);
+            [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            internal static extern bool LineTo(IntPtr hdc, int x, int y);
+            [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            internal static extern bool MoveToEx(IntPtr hdc, int x, int y, IntPtr lppt);
+            [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            internal static extern IntPtr CreatePen(int iStyle, int cWidth, int colorRef);
+            [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            internal static extern IntPtr SetROP2(IntPtr hdc, int rop2);
+        }
+
+        Point endPointAnc = new Point();
+        Point startPointAnc = new Point();
+        bool bDebutFantome = true;
+        void debutFantome()
+        {
+            bDebutFantome = true;
+        }
+        protected void PaintFantome()
+        {
+    
+            Graphics graphics = this.CreateGraphics();
+            IntPtr hdc = graphics.GetHdc();
+            Point endPoint = lastMouseDownPosition;
+            Point startPoint = currentMouseMovePosition;
+            GDI.SetROP2(hdc, 10);  // inverser les couleurs
+                                   // redessiner l'ancien
+
+            if (!bDebutFantome)  // pas au début
+            {
+
+
+                GDI.MoveToEx(hdc, startPointAnc.X, startPointAnc.Y, IntPtr.Zero);
+                GDI.LineTo(hdc, endPointAnc.X, startPointAnc.Y);
+                GDI.LineTo(hdc, endPointAnc.X, endPointAnc.Y);
+                GDI.LineTo(hdc, startPointAnc.X, endPointAnc.Y);
+                GDI.LineTo(hdc, startPointAnc.X, startPointAnc.Y);
+            }
+            bDebutFantome = false;  // une seule fois
+            // dessiner le nouveau
+            endPointAnc.X = endPoint.X;
+            endPointAnc.Y = endPoint.Y;
+            startPointAnc.X = startPoint.X;
+            startPointAnc.Y = startPoint.Y;
+            GDI.MoveToEx(hdc, startPointAnc.X, startPointAnc.Y, IntPtr.Zero);
+            GDI.LineTo(hdc, endPointAnc.X, startPointAnc.Y);
+            GDI.LineTo(hdc, endPointAnc.X, endPointAnc.Y);
+            GDI.LineTo(hdc, startPointAnc.X, endPointAnc.Y);
+            GDI.LineTo(hdc, startPointAnc.X, startPointAnc.Y);
+            // fin dessin
+            graphics.ReleaseHdc(hdc);
+        }
+        private void paint(Graphics graphicsObj)
+        {
+
             // this is the translation and scaling matrix we use to draw on the panel
             Matrix R1 = null;
 
@@ -726,16 +785,15 @@ namespace LineGrinder
 
             // this is 0 in normal mode or set to a value to shift the X axis offset if we are
             // X flipping
-            int flipXCompensator = 0;  
+            int flipXCompensator = 0;
             // normally 1, this gets set to -1 to initiate a flip about the Y axis
             int matrixXFlipInitiator = 1;
 
-            // get the graphics object
-            System.Drawing.Graphics graphicsObj = panel1.CreateGraphics();
-            
+
+
             //DebugMessage("Paint called");
 
-            if(_dpiHasBeenSet == false)
+            if (_dpiHasBeenSet == false)
             {
                 // set this now
                 _dpiX = graphicsObj.DpiX;
@@ -743,74 +801,133 @@ namespace LineGrinder
                 _dpiHasBeenSet = true;
             }
 
-            try
+
+            if (showPlot == false)
             {
-                if (showPlot == false)
+                // just clear the screen
+                graphicsObj.Clear(ApplicationColorManager.DEFAULT_PLOT_PANEL_COLOR);
+            }
+            else
+            {
+                // if this is true, we are done, screen is automatically cleared
+                if (DisplayMode == DisplayModeEnum.DisplayMode_NONE) return;
+
+                if ((GerberFileToDisplay.IsPopulated == true) && (GerberFileToDisplay.FlipMode == FlipModeEnum.X_Flip))
                 {
-                    // just clear the screen
-                    graphicsObj.Clear(ApplicationColorManager.DEFAULT_PLOT_PANEL_COLOR);
+                    // yes, we do want to flip about the Y axis. We will need to adjust some things on the display
+                    flipXCompensator = (int)(gerberFileToDisplay.MaxPlotXCoord * isoPlotPointsPerAppUnit);
+                    matrixXFlipInitiator = -1;
                 }
-                else
+                else if ((ExcellonFileToDisplay.IsPopulated == true) && (ExcellonFileToDisplay.FlipMode == FlipModeEnum.X_Flip))
                 {
-                    // if this is true, we are done, screen is automatically cleared
-                    if (DisplayMode == DisplayModeEnum.DisplayMode_NONE) return;
+                    // yes, we do want to flip about the Y axis. We will need to adjust some things on the display
+                    flipXCompensator = (int)(excellonFileToDisplay.MaxPlotXCoord * isoPlotPointsPerAppUnit);
+                    matrixXFlipInitiator = -1;
+                }
+                else { } // leave everyting at defaults
 
-                    if ((GerberFileToDisplay.IsPopulated == true) && (GerberFileToDisplay.FlipMode == FlipModeEnum.X_Flip))
+                const int INVERSION_COMPENSATOR_OFFSET = 3;
+                // set up the matrix to invert on the Y axis. This
+                // puts the origin 0,0 in the lower left hand corner
+                // the INVERSION_COMPENSATOR_OFFSET is necessary because
+                // the reflection and translation are off slightly. I think
+                // this is due to the borders or something, anyhoo this makes
+                // it come out right
+                R1 = new Matrix(1 * matrixXFlipInitiator, 0, 0, -1, 0, 0);
+                R1.Translate(0, this.Height - INVERSION_COMPENSATOR_OFFSET, MatrixOrder.Append);
+                // R1.Translate(workingOrigin.X, workingOrigin.Y);
+                R1.Translate(workingOrigin.X * matrixXFlipInitiator, workingOrigin.Y);
+                // now compensate for the left, and top padding
+                R1.Translate(plotPadding.Left, plotPadding.Top);
+                // now compensate for the scaling
+                float xScreenScale = ConvertMagnificationLevelToXScreenScaleFactor(MagnificationLevel);
+                float yScreenScale = ConvertMagnificationLevelToYScreenScaleFactor(MagnificationLevel);
+                R1.Scale(xScreenScale, yScreenScale);
+                // now translate appropriately. Normally this will be 0,0 but if we are flip X axis 
+                // it will have other values. Note this MUST come after the above scaling!!! Note that
+                // it goes in negative. The matrix math seems to require this
+                R1.Translate(flipXCompensator * matrixXFlipInitiator, 0);
+
+                //DebugMessage("workingOrigin=" + workingOrigin.ToString());
+
+
+                // DebugMessage("");
+                // DebugMessage("MagnificationLevel=" + MagnificationLevel.ToString());
+                // DebugMessage("xScreenScale=" + xScreenScale.ToString());
+                // DebugMessage("xScreenScale*virtualScreenSize.Width=" + (xScreenScale * virtualScreenSize.Width).ToString());
+                // DebugMessage("yScreenScale=" + yScreenScale.ToString());
+                // DebugMessage("yScreenScale*virtualScreenSize.Height=" + (yScreenScale * virtualScreenSize.Height).ToString());
+                // DebugMessage("");
+                // apply it to the graphics object. This means the rest of the code
+                // does not need to know about it
+                graphicsObj.Transform = R1;
+                // draw the background and the border
+                DrawBackground(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BACKGROUND_BRUSH);
+                //DebugTODO("make the border and corners options");
+                //DrawBorder(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BORDER_PEN);
+                //DrawDiagnosticCornerBoxes(graphicsObj);
+
+                if (DisplayMode == DisplayModeEnum.DisplayMode_GERBERONLY)
+                {
+                    // Draw the Gerber File
+                    if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
                     {
-                        // yes, we do want to flip about the Y axis. We will need to adjust some things on the display
-                        flipXCompensator = (int)(gerberFileToDisplay.MaxPlotXCoord * isoPlotPointsPerAppUnit);
-                        matrixXFlipInitiator = -1;
+                        GerberFileToDisplay.PlotGerberFile(graphicsObj);
                     }
-                    else if ((ExcellonFileToDisplay.IsPopulated == true) && (ExcellonFileToDisplay.FlipMode == FlipModeEnum.X_Flip))
+                    else if ((ExcellonFileToDisplay != null) && (ExcellonFileToDisplay.IsPopulated == true))
                     {
-                        // yes, we do want to flip about the Y axis. We will need to adjust some things on the display
-                        flipXCompensator = (int)(excellonFileToDisplay.MaxPlotXCoord * isoPlotPointsPerAppUnit);
-                        matrixXFlipInitiator = -1;
+                        ExcellonFileToDisplay.PlotExcellonFile(graphicsObj);
                     }
-                    else { } // leave everyting at defaults
-
-                    const int INVERSION_COMPENSATOR_OFFSET = 3;
-                    // set up the matrix to invert on the Y axis. This
-                    // puts the origin 0,0 in the lower left hand corner
-                    // the INVERSION_COMPENSATOR_OFFSET is necessary because
-                    // the reflection and translation are off slightly. I think
-                    // this is due to the borders or something, anyhoo this makes
-                    // it come out right
-                    R1 = new Matrix(1* matrixXFlipInitiator, 0, 0, -1, 0, 0);
-                    R1.Translate(0, panel1.Height - INVERSION_COMPENSATOR_OFFSET, MatrixOrder.Append);
-                    // R1.Translate(workingOrigin.X, workingOrigin.Y);
-                    R1.Translate(workingOrigin.X * matrixXFlipInitiator, workingOrigin.Y);
-                    // now compensate for the left, and top padding
-                    R1.Translate(plotPadding.Left, plotPadding.Top);
-                    // now compensate for the scaling
-                    float xScreenScale = ConvertMagnificationLevelToXScreenScaleFactor(MagnificationLevel);
-                    float yScreenScale = ConvertMagnificationLevelToYScreenScaleFactor(MagnificationLevel);
-                    R1.Scale(xScreenScale, yScreenScale);
-                    // now translate appropriately. Normally this will be 0,0 but if we are flip X axis 
-                    // it will have other values. Note this MUST come after the above scaling!!! Note that
-                    // it goes in negative. The matrix math seems to require this
-                    R1.Translate(flipXCompensator * matrixXFlipInitiator, 0);
-
-                    //DebugMessage("workingOrigin=" + workingOrigin.ToString());
-
-
-                   // DebugMessage("");
-                   // DebugMessage("MagnificationLevel=" + MagnificationLevel.ToString());
-                   // DebugMessage("xScreenScale=" + xScreenScale.ToString());
-                   // DebugMessage("xScreenScale*virtualScreenSize.Width=" + (xScreenScale * virtualScreenSize.Width).ToString());
-                   // DebugMessage("yScreenScale=" + yScreenScale.ToString());
-                   // DebugMessage("yScreenScale*virtualScreenSize.Height=" + (yScreenScale * virtualScreenSize.Height).ToString());
-                   // DebugMessage("");
-                    // apply it to the graphics object. This means the rest of the code
-                    // does not need to know about it
-                    graphicsObj.Transform = R1;
-                    // draw the background and the border
-                    DrawBackground(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BACKGROUND_BRUSH);
-                    //DebugTODO("make the border and corners options");
-                    //DrawBorder(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BORDER_PEN);
-                    //DrawDiagnosticCornerBoxes(graphicsObj);
-
-                    if (DisplayMode == DisplayModeEnum.DisplayMode_GERBERONLY)
+                }
+                else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP1)
+                {
+                    // the bitmap will have been set up differently
+                    if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
+                    // do we want to show the gerber plot anyways?
+                    if (ShowGerberOnGCode == true)
+                    {
+                        // Draw the Gerber File
+                        if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
+                        {
+                            GerberFileToDisplay.PlotGerberFile(graphicsObj);
+                        }
+                    }
+                }
+                else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP2)
+                {
+                    if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
+                    // do we want to show the gerber plot anyways?
+                    if (ShowGerberOnGCode == true)
+                    {
+                        // Draw the Gerber File
+                        if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
+                        {
+                            GerberFileToDisplay.PlotGerberFile(graphicsObj);
+                        }
+                    }
+                }
+                else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP3)
+                {
+                    if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
+                    // do we want to show the gerber plot anyways?
+                    if (ShowGerberOnGCode == true)
+                    {
+                        // Draw the Gerber File
+                        if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
+                        {
+                            GerberFileToDisplay.PlotGerberFile(graphicsObj);
+                        }
+                    }
+                }
+                else if (DisplayMode == DisplayModeEnum.DisplayMode_GCODEONLY)
+                {
+                    // show the GCode File
+                    if (GCodeFileToDisplay != null)
+                    {
+                        GCodeFileToDisplay.PlotGCodeFile(graphicsObj, false);
+                    }
+                    // do we want to show the gerber plot anyways?
+                    if (ShowGerberOnGCode == true)
                     {
                         // Draw the Gerber File
                         if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
@@ -822,103 +939,153 @@ namespace LineGrinder
                             ExcellonFileToDisplay.PlotExcellonFile(graphicsObj);
                         }
                     }
-                    else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP1)
-                    {
-                        // the bitmap will have been set up differently
-                        if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
-                        // do we want to show the gerber plot anyways?
-                        if (ShowGerberOnGCode == true)
-                        {
-                            // Draw the Gerber File
-                            if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
-                            {
-                                GerberFileToDisplay.PlotGerberFile(graphicsObj);
-                            }
-                        }
-                    }
-                    else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP2)
-                    {
-                        if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
-                        // do we want to show the gerber plot anyways?
-                        if (ShowGerberOnGCode == true)
-                        {
-                            // Draw the Gerber File
-                            if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
-                            {
-                                GerberFileToDisplay.PlotGerberFile(graphicsObj);
-                            }
-                        }
-                    }
-                    else if (DisplayMode == DisplayModeEnum.DisplayMode_ISOSTEP3)
-                    {
-                        if (backgroundBitmap != null) graphicsObj.DrawImage(backgroundBitmap, 0, 0);
-                        // do we want to show the gerber plot anyways?
-                        if (ShowGerberOnGCode == true)
-                        {
-                            // Draw the Gerber File
-                            if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
-                            {
-                                GerberFileToDisplay.PlotGerberFile(graphicsObj);
-                            }
-                        }
-                    }
-                    else if (DisplayMode == DisplayModeEnum.DisplayMode_GCODEONLY)
-                    {
-                        // show the GCode File
-                        if (GCodeFileToDisplay != null)
-                        {
-                            GCodeFileToDisplay.PlotGCodeFile(graphicsObj, false);
-                        }
-                        // do we want to show the gerber plot anyways?
-                        if (ShowGerberOnGCode == true)
-                        {
-                            // Draw the Gerber File
-                            if ((GerberFileToDisplay != null) && (GerberFileToDisplay.IsPopulated == true))
-                            {
-                                GerberFileToDisplay.PlotGerberFile(graphicsObj);
-                            }
-                            else if ((ExcellonFileToDisplay != null) && (ExcellonFileToDisplay.IsPopulated == true))
-                            {
-                                ExcellonFileToDisplay.PlotExcellonFile(graphicsObj);
-                            }
-                        }
-                    }
-                    // draw the Flip Axis origin, if enabled
-                    DrawFlipAxis(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_FLIPAXIS_PEN);
-                    // draw the GCode origin, if enabled
-                    DrawGCodeOrigin(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_GCODE_ORIGIN_PEN);
-                    // draw the origin, if enabled, this always goes over top the GCode origin
-                    DrawOrigin(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN);
-
-                    // actually this returns a clone it will need to be disposed
-                    //Matrix R2 = graphicsObj.Transform;
-                    //R2.Invert();
-                    //lastTransformMatrix = R2;
                 }
+                // draw the Flip Axis origin, if enabled
+                DrawFlipAxis(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_FLIPAXIS_PEN);
+                // draw the GCode origin, if enabled
+                DrawGCodeOrigin(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_GCODE_ORIGIN_PEN);
+                // draw the origin, if enabled, this always goes over top the GCode origin
+                DrawOrigin(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN);
+
+                // actually this returns a clone it will need to be disposed
+                //Matrix R2 = graphicsObj.Transform;
+                //R2.Invert();
+                //lastTransformMatrix = R2;
+                // fmfcd
+                switch (action)
+                {
+                    case TA_Action.TA_SELECTION:
+                        paintSelect(graphicsObj);
+                        break;
+                    default:
+                        break;
+                }
+
+
+
             }
-            finally
+
+
+        }
+
+        public void paintSelect(Graphics graphicsObj)
+        {
+            // a afficher directement sur le graphics
+            Point endPoint = MouseToWorld(lastMouseDownPosition);
+            Point startPoint = MouseToWorld(currentMouseMovePosition);
+            Rectangle rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
+            graphicsObj.DrawRectangle(ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN, rcSelection);
+
+        }
+        public void noAction()  // plus d'action en cours
+        {
+            action = TA_Action.TA_AUCUNE;
+        }
+        public void selectElements()
+        {
+            /// TODO
+            Point endPoint = MouseToWorld(lastMouseDownPosition);
+            Point startPoint = MouseToWorld(currentMouseMovePosition);
+            Rectangle rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
+            if (gcodeFileToDisplay != null)
             {
-                if (graphicsObj != null) graphicsObj.Dispose();
-            } 
+
+                // trouver les élément entièrement dans le rectangle de selection
+                List<GCodeCmd> listeGCodeCmd = gcodeFileToDisplay.SourceLines.FindAll(g =>
+                {
+
+
+                    if (g.GetType() == typeof(GCodeCmd_Line))
+                    {
+                        if (((GCodeCmd_Line)g).X0 > startPoint.X && ((GCodeCmd_Line)g).Y0 > startPoint.Y
+                            && ((GCodeCmd_Line)g).X0 < endPoint.X && ((GCodeCmd_Line)g).Y0 < endPoint.Y
+                            &&
+                             ((GCodeCmd_Line)g).X1 > startPoint.X && ((GCodeCmd_Line)g).Y1 > startPoint.Y
+                            && ((GCodeCmd_Line)g).X1 < endPoint.X && ((GCodeCmd_Line)g).Y1 < endPoint.Y)
+                            return true;
+                    }
+                    else if (g.GetType() == typeof(GCodeCmd_Arc))
+                    {
+                        if (((GCodeCmd_Arc)g).X0 > startPoint.X && ((GCodeCmd_Arc)g).Y0 > startPoint.Y
+                            && ((GCodeCmd_Arc)g).X0 < endPoint.X && ((GCodeCmd_Arc)g).Y0 < endPoint.Y
+                            &&
+                             ((GCodeCmd_Arc)g).X1 > startPoint.X && ((GCodeCmd_Arc)g).Y1 > startPoint.Y
+                            && ((GCodeCmd_Arc)g).X1 < endPoint.X && ((GCodeCmd_Arc)g).Y1 < endPoint.Y)
+                            return true;
+
+                    }
+
+                    return false;
+                });
+                // ajouter
+                foreach (var gcodeCmd in listeGCodeCmd)
+                {
+                    int index = gcodeFileToDisplay.SourceLines.IndexOf(gcodeCmd);
+                    if (index != -1)
+                        AddSelect(index);
+                }
+
+                Invalidate();
+            }
         }
 
         private bool rightButtonDown = false;
         private bool leftButtonDown = false;
+        //protected override void OnMouseMove(MouseEventArgs e)
+        //{
+        //    base.OnMouseMove(e);
+        private void ctlPlotViewer_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!this.Capture)
+                return;
+            Point convertedPoint = MouseToWorld(e.Location);
+            currentMouseMovePosition.X = e.X;
+            currentMouseMovePosition.Y = e.Y;
 
+            mouseCursorDisplayControl.Text = string.Format(convertedPoint.X + ":" + convertedPoint.Y);
+            if (leftButtonDown)
+            {
+                switch (action)
+                {
+                    case TA_Action.TA_SELECTION:
+                        PaintFantome();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// This handles a mouse down event for the panel
         /// </summary>
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        //protected override void OnMouseDown(MouseEventArgs e)
+        //{
+          //  base.OnMouseDown(e);
+        
+
+        private void ctlPlotViewer_MouseDown(object sender, MouseEventArgs e)
         {
+
+            // enable panning
+            panningActive = true;
+            lastMouseDownPosition.X = e.X;
+            lastMouseDownPosition.Y = e.Y;
+
+            workingOriginAtMouseDown = workingOrigin;
             // fmfcd
             Point convertedPoint = MouseToWorld(e.Location);
 
             if (gcodeFileToDisplay != null)
             {
-                int index = gcodeFileToDisplay.SourceLines.FindIndex(  g => {
+                action = TA_Action.TA_SELECTION;
+                debutFantome(); // pour un dessin correct du fantome
+                // recherche d'un élément sous le curseur
+                int index = gcodeFileToDisplay.SourceLines.FindIndex(g => {
                     // predicate
                     // TODO à placer dans GCodeCmd, GCodeCmd_Line et GCodeCmd_Arc
+                    // selection
+
                     int dRec = 10; // zone de recherche carré
                     if (g.GetType() == typeof(GCodeCmd_Line))
                     {
@@ -935,51 +1102,17 @@ namespace LineGrinder
                             return true;
                         if ((Math.Abs(((GCodeCmd_Arc)g).X1 - convertedPoint.X) < dRec) && (Math.Abs(((GCodeCmd_Arc)g).Y1 - convertedPoint.Y) < dRec))
                             return true;
-                        
+
                     }
 
                     return false;
                 });
+                // fmfcd
                 if (index == -1)
                     mouseCursorDisplayControl.Text = string.Format("no gCode ");
                 else
-                {// fmfcd
+                    AddSelect(index);
 
-                    GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines[index];
-                    string sgCodeCmd= gCodeCmd.GetGCodeCmd( gcodeFileToDisplay.StateMachine);
-                    mouseCursorDisplayControl.Text = string.Format("index" + index + " gCode " + sgCodeCmd);
-                    // en 2 étapes : sélection puis suppression souligner la ligne sélectionner en rouge
-                    int iSelect = gcodeFileToDisplay.listeIndexSelection.FindIndex(i => i == index);
-                    //if (!gcodeFileToDisplay.listeIndexSelection.Contains(index))  // si pas déjà dans la liste
-                    if (iSelect == -1)
-                        gcodeFileToDisplay.listeIndexSelection.Add(index); // ajouter aux éléments sélectionné                    
-                    else
-                    {
-                        gcodeFileToDisplay.listeIndexSelection.RemoveAt(iSelect);  // enlever de la sélection
-                    }
-                    Invalidate();
-
-                }
-                /*GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines.Find( g => {
-                    // predicate
-
-                    if (g.GetType() == typeof(GCodeCmd_Line))
-                    {
-                        if ((Math.Abs(((GCodeCmd_Line)g).X0 - convertedPoint.X) < 50) && (Math.Abs(((GCodeCmd_Line)g).Y0 - convertedPoint.Y) < 50))
-                            return true;
-                    }
-                        
-                    return false;
-                });
-               
-                if (gCodeCmd==null)
-                    mouseCursorDisplayControl.Text = string.Format("no gCode ");
-                else
-                {
-                    
-                    mouseCursorDisplayControl.Text = string.Format("gCode " + gCodeCmd.ToString());
-
-                } //*/
 
             }
             // /fmfcd
@@ -992,19 +1125,38 @@ namespace LineGrinder
             // at the same time in order to pan
             if (leftButtonDown == false || rightButtonDown == false) return;
 
-            // enable panning
-            panningActive = true;
-            lastMouseDownPosition.X = e.X;
-            lastMouseDownPosition.Y = e.Y;
-            workingOriginAtMouseDown = workingOrigin;
-            
+
+
+        }
+
+        private void AddSelect(int index)
+        {
+            // fmfcd
+
+            GCodeCmd gCodeCmd = gcodeFileToDisplay.SourceLines[index];
+            string sgCodeCmd = gCodeCmd.GetGCodeCmd(gcodeFileToDisplay.StateMachine);
+            mouseCursorDisplayControl.Text = string.Format("index" + index + " gCode " + sgCodeCmd);
+            // en 2 étapes : sélection puis suppression souligner la ligne sélectionner en rouge
+            int iSelect = gcodeFileToDisplay.listeIndexSelection.FindIndex(i => i == index);
+            //if (!gcodeFileToDisplay.listeIndexSelection.Contains(index))  // si pas déjà dans la liste
+            if (iSelect == -1)
+                gcodeFileToDisplay.listeIndexSelection.Add(index); // ajouter aux éléments sélectionné                    
+            else
+            {
+                gcodeFileToDisplay.listeIndexSelection.RemoveAt(iSelect);  // enlever de la sélection
+            }
+            Invalidate();
+
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// This handles a mouse up event for the panel
         /// </summary>
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        //protected override void OnMouseUp(MouseEventArgs e)
+        //{
+        //  base.OnMouseUp(e);
+        private void ctlPlotViewer_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -1016,124 +1168,33 @@ namespace LineGrinder
             }
             // any upclick on any button turns off panning
             panningActive = false;
+            // fmfcd
+            //action = TA_Action.TA_AUCUNE; // fmfcd fin de selction
+
+            switch (action)
+            {
+                case TA_Action.TA_SELECTION:
+                    // sélectionner les éléments dans la zone 
+                    selectElements();
+                    Invalidate();  // ou dessiner par dessus la screen
+                    break;
+                default:
+                    break;
+            }
 
         }
 
         Point MouseToWorld(Point location)
-        {            
+        {
             // trouver l'origine du gerber
-            //Point pObject = new Point(location.X, panel1.Height - (location.Y));
-            Point[] tPoint = { location };            
+            //Point pObject = new Point(location.X, this.Height - (location.Y));
+            Point[] tPoint = { location };
             viewportMatrix.TransformPoints(tPoint);
-            Point pObject = tPoint[0];                        
+            Point pObject = tPoint[0];
 
             // fmfcd debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
-            return pObject;               
-            
-        }
+            return pObject;
 
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
-        /// This handles a mouse move event for the panel
-        /// </summary>
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if(mouseCursorDisplayControl != null)
-            {
-                Point convertedPoint = MouseToWorld(e.Location);  // fmfcd et pas Cursor
-
-                mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1}", convertedPoint.X, convertedPoint.Y);
-            }
-
-            PointF tmpOrigin = new PointF();
-            if (panningActive == true)
-            {
-                // record what we started with
-                PointF tempOrigin = workingOrigin;
-
-                // ####
-                // #### X axis panning
-                // ####
-                // is it possible to pan in the X direction?
-                if (hScrollBar1.Maximum > hScrollBar1.LargeChange)
-                {
-                    // yes, it is possible to pan in the x direction
-                    try
-                    {
-                        tmpOrigin.X = workingOriginAtMouseDown.X - (lastMouseDownPosition.X - e.X);
-                        //DebugMessage("tmpOrigin.X=" + tmpOrigin.X.ToString() + " workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + hScrollBar1.Value.ToString() + " hScrollBar1.Minimum=" + hScrollBar1.Minimum.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString());
-
-                        if (tmpOrigin.X < ((hScrollBar1.Maximum - hScrollBar1.LargeChange) * -1))
-                        {
-                            workingOrigin.X = (float)((hScrollBar1.Maximum - hScrollBar1.LargeChange) * -1);
-                            //DebugMessage("a" + workingOrigin.X.ToString());
-                            hScrollBar1.Value = hScrollBar1.Maximum;
-                        }
-                        else if (tmpOrigin.X > hScrollBar1.Minimum)
-                        {
-                            workingOrigin.X = (float)(hScrollBar1.Minimum * -1);
-                            //DebugMessage("b" + workingOrigin.X.ToString());
-                            hScrollBar1.Value = hScrollBar1.Minimum;
-                        }
-                        else
-                        {
-                            // DebugMessage("c" + workingOrigin.X.ToString());
-                            workingOrigin.X = tmpOrigin.X;
-                            hScrollBar1.Value = (int)(tmpOrigin.X * -1);
-                        }
-                    }
-                    catch
-                    {
-                        // do not throw exceptions here
-                    }
-                } // bottom of if (hScrollBar1.Maximum > hScrollBar1.LargeChange)
-
-                // ####
-                // #### Y axis panning
-                // ####
-                // is it possible to pan in the Y direction?
-                if (vScrollBar1.Maximum > vScrollBar1.LargeChange)
-                {
-                    // yes, it is possible to pan in the Y direction
-                    try
-                    {
-                        tmpOrigin.Y = workingOriginAtMouseDown.Y + (lastMouseDownPosition.Y - e.Y);
-                      //    DebugMessage("tmpOrigin.Y=" + tmpOrigin.Y.ToString() + " workingOrigin.Y=" + workingOrigin.Y.ToString() + " Value=" + vScrollBar1.Value.ToString() + " vScrollBar1.Minimum=" + vScrollBar1.Minimum.ToString() + " vScrollBar1.Maximum=" + vScrollBar1.Maximum.ToString() + " vScrollBar1.LargeChange=" + vScrollBar1.LargeChange.ToString());
-
-                        if (tmpOrigin.Y < ((vScrollBar1.Maximum - vScrollBar1.LargeChange) * -1))
-                        {
-                        //    DebugMessage("a " + tmpOrigin.Y.ToString());
-                            workingOrigin.Y = (float)((vScrollBar1.Maximum - vScrollBar1.LargeChange) * -1);
-                            vScrollBar1.Value = vScrollBar1.Minimum;
-                        }
-                        else if (tmpOrigin.Y > vScrollBar1.Minimum)
-                        {
-                         //   DebugMessage("b " + tmpOrigin.Y.ToString());
-                            workingOrigin.Y = (float)(vScrollBar1.Minimum * -1);
-                            vScrollBar1.Value = (vScrollBar1.Maximum - vScrollBar1.LargeChange);
-                        }
-                        else
-                        {
-                         //   DebugMessage("c " + tmpOrigin.Y.ToString());
-                            workingOrigin.Y = tmpOrigin.Y;
-                            vScrollBar1.Value = (int)((vScrollBar1.Maximum - vScrollBar1.LargeChange)+(tmpOrigin.Y));
-                        }
-                    }
-                    catch
-                    {
-                        // do not throw exceptions here
-                    }
-                } // bottom of if (vScrollBar1.Maximum > vScrollBar1.LargeChange)
-
-                // did we actually change the origin? do not redraw the screen if it did not change
-                // this saves on flashing
-                if(((tempOrigin.X == workingOrigin.X) && (tempOrigin.Y == workingOrigin.Y))==false)
-                {
-                    // we did change invalidate the screen
-                    panel1.Invalidate();
-                    hScrollBar1.Invalidate();
-                }
-            }
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -1219,198 +1280,6 @@ namespace LineGrinder
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
-        /// Handle a scroll event on the horizontal scroll bar
-        /// </summary>
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            // the algorythm in the SetScrollBar values makes this 
-            // work out really simply
-            workingOrigin.X = e.NewValue*-1;
-         //   DebugMessage("workingOrigin.X=" + workingOrigin.X.ToString() + " Value=" + e.NewValue.ToString() + " hScrollBar1.Maximum=" + hScrollBar1.Maximum.ToString() + " hScrollBar1.LargeChange=" + hScrollBar1.LargeChange.ToString() + " value+LargeChange+e.NewValue=" + (hScrollBar1.LargeChange + e.NewValue).ToString());
-            panel1.Invalidate();
-        }
-
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
-        /// Handle a scroll event on the vertical scroll bar
-        /// </summary>
-        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            // the algorythm in the SetScrollBar values makes this 
-            // work out really simply
-            workingOrigin.Y = e.NewValue - (vScrollBar1.Maximum - vScrollBar1.LargeChange);
-          //  DebugMessage("workingOrigin.Y=" + workingOrigin.Y.ToString() + " Value=" + e.NewValue.ToString() + " vScrollBar1.Maximum=" + vScrollBar1.Maximum.ToString() + " vScrollBar1.LargeChange=" + vScrollBar1.LargeChange.ToString() + " value+LargeChange=" + (vScrollBar1.LargeChange + e.NewValue).ToString());
-            panel1.Invalidate();
-        }
-
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
-        /// Syncs the scroll bar slider positions to the current origin
-        /// </summary>
-        public void SyncCurrentOriginToScrollBarSliderPositions()
-        {
-            try
-            {
-                if (hScrollBar1.LargeChange > hScrollBar1.Maximum)
-                {
-                    // our virtual screen does not occupy the full screen
-                    // the best centering offset is in the tag
-                    int tmpOffset = (int)hScrollBar1.Tag;
-                    if(tmpOffset>=0) workingOrigin.X = (int)hScrollBar1.Tag;
-                    else workingOrigin.X = 0;
-                }
-                else
-                {
-                    // we can use this to scroll
-                    workingOrigin.X = hScrollBar1.Value * -1;
-                }
-/*
-                DebugMessage("");
-                DebugMessage("SyncCurrentOriginToScrollBarSliderPositions");
-                DebugMessage("workingOrigin.X=" + workingOrigin.X.ToString());
-                DebugMessage("hScrollBar1.Value=" + hScrollBar1.Value.ToString());
-                DebugMessage("hScrollBar1.Tag=" + ((int)(hScrollBar1.Tag)).ToString());
-                DebugMessage("");
- */
-            }
-            catch { }
-
-            try
-            {
-                if (vScrollBar1.LargeChange > vScrollBar1.Maximum)
-                {
-                    // our virtual screen does not occupy the full screen
-                    // the best centering offset is in the tag
-                    int tmpOffset = (int)vScrollBar1.Tag;
-                    if (tmpOffset >= 0) workingOrigin.Y = (int)vScrollBar1.Tag;
-                    else workingOrigin.Y = 0;
-                }
-                else
-                {
-                    // we can use this to scroll
-                    workingOrigin.Y = vScrollBar1.Value - (vScrollBar1.Maximum - vScrollBar1.LargeChange);
-                }
-/*
-                DebugMessage("");
-                DebugMessage("SyncCurrentOriginToScrollBarSliderPositions");
-                DebugMessage("workingOrigin.Y=" + workingOrigin.Y.ToString());
-                DebugMessage("vScrollBar1.Value=" + vScrollBar1.Value.ToString());
-                DebugMessage("vScrollBar1.Tag=" + ((int)(vScrollBar1.Tag)).ToString());
-                DebugMessage("");
- */
-            }
-            catch { }
-        }
-
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
-        /// Set the scroll bar values, code derived from sample at
-        /// http://msdn.microsoft.com/en-us/library/system.windows.forms.scrollbar.maximum.aspx
-        /// </summary>
-        public void SetScrollBarMaxMinLimits()
-        {
-            int workingSmallChange = 0;
-            int workingLargeChange = 0;
-
-            //SmallChange and LargeChange: Per UI guidelines, these must be set
-            //    relative to the size of the view that the user sees, not to
-            //    the total size including the unseen part.  In this example,
-            //    these must be set relative to the panel box, not to the image.
-
-            //Configure the horizontal scrollbar
-            if (this.hScrollBar1.Visible)
-            {
-                // calc the number of pixels of our virtual plot would use  // même pbm que pour MouseToWorld
-                // on the screen if it were possible to make it fully visible
-                int virtualScreenWidthInScreenPixels = (int)((((float)this.virtualScreenSize.Width) * DotsPerAppUnitX * MagnificationLevel) / isoPlotPointsPerAppUnit);
-                // BUG2026_1 -> provisoirement plus de scrollbar
-                // set these. The Large Change will be the width of our scroll thumb
-                workingSmallChange = virtualScreenWidthInScreenPixels / 20; 
-                workingLargeChange = virtualScreenWidthInScreenPixels / 10;  
-
-                
-                // calculate the working scrollbar maximum fmfcd
-                //before // int workingMaximum = virtualScreenWidthInScreenPixels + workingLargeChange - (panel1.ClientSize.Width - vScrollBar1.Width);
-                // fmfcd
-                int workingMaximum = virtualScreenWidthInScreenPixels + workingLargeChange - (panel1.ClientSize.Width - vScrollBar1.Width);
-//                DebugMessage("workingMaximum=" + workingMaximum.ToString());
-                // is our current virtualScreenWidthInScreenPixels less than the 
-                // actual panel+compensation factors? It is if the working maximum is less than zero
-//               if (workingMaximum <= workingLargeChange)
-                {
-//                    DebugMessage("noscroll mode");
-                    // the virtualScreenWidthInScreenPixels is less than the screen size, we set defaults
-                    // the call to SyncCurrentOriginToScrollBarSliderPositions() should notice that
-                    // LargeChange>Maximum and adjust the offset to center the virtual screen
-                    hScrollBar1.Minimum = 0;
-                    hScrollBar1.Maximum = 100;
-                    this.hScrollBar1.SmallChange = 100;
-                    this.hScrollBar1.LargeChange = hScrollBar1.Maximum+1;
-                    hScrollBar1.Value = 0;
-                    hScrollBar1.Tag = (panel1.ClientSize.Width - vScrollBar1.Width - virtualScreenWidthInScreenPixels)/2;
-                }
-                /*else
-                {
-    //                DebugMessage("scroll mode");
-                    hScrollBar1.Minimum = 0;
-                    hScrollBar1.Maximum = workingMaximum;
-                    hScrollBar1.SmallChange = workingSmallChange;
-                    hScrollBar1.LargeChange = workingLargeChange;
-                    //TODO set the value now
-                    hScrollBar1.Value = 1;
-                    hScrollBar1.Tag = (panel1.ClientSize.Width - vScrollBar1.Width - virtualScreenWidthInScreenPixels)/2;
-                }*/
-
-            }
-
-            //Configure the vertical scrollbar
-            if (this.vScrollBar1.Visible)
-            {
-                // calc the number of pixels of our virtual plot would use
-                // on the screen if it were possible to make it fully visible
-                int virtualScreenHeightInScreenPixels = (int)((((float)this.virtualScreenSize.Height) * DotsPerAppUnitY * MagnificationLevel) / isoPlotPointsPerAppUnit);
-
-                // set these. The Large Change will be the width of our scroll thumb
-                workingSmallChange = virtualScreenHeightInScreenPixels / 20;
-                workingLargeChange = virtualScreenHeightInScreenPixels / 10;
-         
-                // calculate the working scrollbar maximum
-                int workingMaximum = virtualScreenHeightInScreenPixels + workingLargeChange - (panel1.ClientSize.Height - hScrollBar1.Height);
-                //DebugMessage("workingMaximum=" + workingMaximum.ToString());
-                // is our current virtualScreenHeightInScreenPixels less than the 
-                // actual panel+compensation factors? It is if the working maximum is less than zero
-            //    if (workingMaximum <= workingLargeChange)*/
-                {
-                   // DebugMessage("noscroll mode");
-                    // the virtualScreenHeightInScreenPixels is less than the screen size, we set defaults
-                    // the call to SyncCurrentOriginToScrollBarSliderPositions() should notice that
-                    // LargeChange>Maximum and adjust the offset to center the virtual screen
-                    vScrollBar1.Minimum = 0;
-                    vScrollBar1.Maximum = 100;
-                    this.vScrollBar1.SmallChange = 100;
-                    this.vScrollBar1.LargeChange = vScrollBar1.Maximum + 1;
-                    vScrollBar1.Value = 0;
-                    vScrollBar1.Tag = (panel1.ClientSize.Height - hScrollBar1.Height - virtualScreenHeightInScreenPixels) / 2;
-                }
-              /* else
-                {
-                    //DebugMessage("scroll mode");
-                    vScrollBar1.Minimum = 0;
-                    vScrollBar1.Maximum = workingMaximum;
-                    vScrollBar1.SmallChange = workingSmallChange;
-                    vScrollBar1.LargeChange = workingLargeChange;
-                    //TODO set the value nowv
-                    vScrollBar1.Value = 1;
-                    vScrollBar1.Tag = (panel1.ClientSize.Height - hScrollBar1.Height - virtualScreenHeightInScreenPixels) / 2;
-                }
-               */
-            }
-
-            SyncCurrentOriginToScrollBarSliderPositions();
-        }
-
-        /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-        /// <summary>
         /// Draws the flip axis line - the line we flip around
         /// </summary>
         /// <param name="graphicsObj"> a valid graphics object</param>
@@ -1431,7 +1300,7 @@ namespace LineGrinder
 
             // the zero in here just re-inforces that we are offsetting from the (0,0) plot position
             double xOrigin = 0 + Math.Round((this.midPlotXCoord * IsoPlotPointsPerAppUnit)); ;
-           // double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;
+            // double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;
 
             // DebugMessage("xOrigin = " + xOrigin.ToString() + " xScreenScale=" + xScreenScale.ToString());
 
@@ -1453,7 +1322,7 @@ namespace LineGrinder
         {
             const float ORIGIN_CROSSHAIR_LEN = 10;
             //graphicsObj.Transform.Reset();  // !!!! y en 0
-            
+
             viewportMatrix = graphicsObj.Transform.Clone();  // matrice de transformation unit -> display
             viewportMatrix.Invert();
 
@@ -1471,12 +1340,12 @@ namespace LineGrinder
             // the zero in here just re-inforces that we are offsetting from the (0,0) plot position
             double xOrigin = 0 + Math.Round((plotXOriginLocation * IsoPlotPointsPerAppUnit)); ;
             double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;
-         //   DebugMessage("xOrigin = " + xOrigin.ToString() + " xScreenScale=" + xScreenScale.ToString());
+            //   DebugMessage("xOrigin = " + xOrigin.ToString() + " xScreenScale=" + xScreenScale.ToString());
 
-            Point startPointX = new Point(((int)xOrigin)+(xLineLen * -1), (int)yOrigin);
-            Point endPointX = new Point(((int)xOrigin)+xLineLen, (int)yOrigin);
-            Point startPointY = new Point((int)xOrigin, ((int)yOrigin)+(yLineLen * -1));
-            Point endPointY = new Point((int)xOrigin, ((int)yOrigin)+yLineLen);
+            Point startPointX = new Point(((int)xOrigin) + (xLineLen * -1), (int)yOrigin);
+            Point endPointX = new Point(((int)xOrigin) + xLineLen, (int)yOrigin);
+            Point startPointY = new Point((int)xOrigin, ((int)yOrigin) + (yLineLen * -1));
+            Point endPointY = new Point((int)xOrigin, ((int)yOrigin) + yLineLen);
 
             // draw the cross hair lines
             graphicsObj.DrawLine(originPen, startPointX, endPointX);
@@ -1624,24 +1493,6 @@ namespace LineGrinder
             graphicsObj.FillRectangle(backgroundBrush, (float)0, (float)0, (float)virtualPlotSize.Width, (float)virtualPlotSize.Height);
         }
 
-        // ####################################################################
-        // ##### Test and Diagnostic Junk
-        // ####################################################################
-        #region Test and Diagnostic Junk
-
- 
-        public void Test()
-        {
-            hScrollBar1.SmallChange=1;
-            hScrollBar1.LargeChange = 50;
-            hScrollBar1.Minimum = 0;
-            hScrollBar1.Maximum = 100;
-            hScrollBar1.Value = 10;
-        }
-
-        #endregion
-
-
     }
-}
 
+}

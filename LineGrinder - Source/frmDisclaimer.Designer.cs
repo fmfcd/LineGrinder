@@ -45,7 +45,7 @@ namespace LineGrinder
             this.textBoxTitle.ReadOnly = true;
             this.textBoxTitle.Size = new System.Drawing.Size(309, 24);
             this.textBoxTitle.TabIndex = 5;
-            this.textBoxTitle.Text = "Line Grinder";
+            this.textBoxTitle.Text = "Line Grinder fmfcd";
             this.textBoxTitle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // buttonDoNotAgree
@@ -101,7 +101,7 @@ namespace LineGrinder
             this.Name = "frmDisclaimer";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Line Grinder: Disclaimer";
+            this.Text = "Line Grinder fmfcd: Disclaimer";
             this.ResumeLayout(false);
             this.PerformLayout();
 

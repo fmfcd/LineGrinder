@@ -1328,7 +1328,7 @@ namespace LineGrinder
             this.buttonAbout.Name = "buttonAbout";
             this.buttonAbout.Size = new System.Drawing.Size(222, 111);
             this.buttonAbout.TabIndex = 24;
-            this.buttonAbout.Text = "About Line Grinder";
+            this.buttonAbout.Text = "About Line Grinder fmfcd";
             this.buttonAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.buttonAbout.UseVisualStyleBackColor = true;
             this.buttonAbout.Click += new System.EventHandler(this.buttonAbout_Click);
@@ -1471,7 +1471,7 @@ namespace LineGrinder
             this.ctlPlotViewer1.Name = "ctlPlotViewer1";
             this.ctlPlotViewer1.Size = new System.Drawing.Size(1234, 908);
             this.ctlPlotViewer1.TabIndex = 2;
-            this.ctlPlotViewer1.Load += new System.EventHandler(this.ctlPlotViewer1_Load);
+            //this.ctlPlotViewer1.Load += new System.EventHandler(this.ctlPlotViewer1_Load);  // à enlever
             // 
             // ctlFileManagersDisplay1
             // 
