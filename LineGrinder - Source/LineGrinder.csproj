@@ -35,7 +35,7 @@
     <PublisherName>fmfcd</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>3.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -321,12 +321,6 @@
     <None Include="gear_s.gif" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OISCommon\OISCommon.csproj">
-      <Project>{63F435C6-492C-4155-AB3B-589FEB36804F}</Project>
-      <Name>OISCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.8 %28x86 et x64%29</ProductName>
@@ -337,6 +331,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OISCommon\OISCommon.csproj">
+      <Project>{63f435c6-492c-4155-ab3b-589feb36804f}</Project>
+      <Name>OISCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

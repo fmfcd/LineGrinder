@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -118,6 +119,7 @@ namespace LineGrinder
         private bool panningActive = false;
 
         private TextBox mouseCursorDisplayControl = null;
+        private TextBox statusDisplayControl = null;
         //private Matrix lastTransformMatrix = null;
 
         // fmfcd selection
@@ -155,7 +157,19 @@ namespace LineGrinder
                 mouseCursorDisplayControl = value;
             }
         }
-
+        // fmfcd
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TextBox StatusDisplayControl
+        {
+            get
+            {
+                return statusDisplayControl;
+            }
+            set
+            {
+                statusDisplayControl = value;
+            }
+        }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// An invalidate routine for this control
@@ -808,7 +822,7 @@ namespace LineGrinder
                 graphicsObj.Clear(ApplicationColorManager.DEFAULT_PLOT_PANEL_COLOR);
             }
             else
-            {
+            {   // fmfcd de quel façon dessiner sur le controle
                 // if this is true, we are done, screen is automatically cleared
                 if (DisplayMode == DisplayModeEnum.DisplayMode_NONE) return;
 
@@ -824,7 +838,8 @@ namespace LineGrinder
                     flipXCompensator = (int)(excellonFileToDisplay.MaxPlotXCoord * isoPlotPointsPerAppUnit);
                     matrixXFlipInitiator = -1;
                 }
-                else { } // leave everyting at defaults
+                else {
+                } // leave everyting at defaults
 
                 const int INVERSION_COMPENSATOR_OFFSET = 3;
                 // set up the matrix to invert on the Y axis. This
@@ -846,27 +861,18 @@ namespace LineGrinder
                 // now translate appropriately. Normally this will be 0,0 but if we are flip X axis 
                 // it will have other values. Note this MUST come after the above scaling!!! Note that
                 // it goes in negative. The matrix math seems to require this
-                R1.Translate(flipXCompensator * matrixXFlipInitiator, 0);
-
-                //DebugMessage("workingOrigin=" + workingOrigin.ToString());
+                R1.Translate(flipXCompensator * matrixXFlipInitiator, 0);                
 
 
-                // DebugMessage("");
-                // DebugMessage("MagnificationLevel=" + MagnificationLevel.ToString());
-                // DebugMessage("xScreenScale=" + xScreenScale.ToString());
-                // DebugMessage("xScreenScale*virtualScreenSize.Width=" + (xScreenScale * virtualScreenSize.Width).ToString());
-                // DebugMessage("yScreenScale=" + yScreenScale.ToString());
-                // DebugMessage("yScreenScale*virtualScreenSize.Height=" + (yScreenScale * virtualScreenSize.Height).ToString());
-                // DebugMessage("");
                 // apply it to the graphics object. This means the rest of the code
                 // does not need to know about it
                 graphicsObj.Transform = R1;
                 // draw the background and the border
                 DrawBackground(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BACKGROUND_BRUSH);
-                //DebugTODO("make the border and corners options");
-                //DrawBorder(graphicsObj, ApplicationColorManager.DEFAULT_PLOT_BORDER_PEN);
-                //DrawDiagnosticCornerBoxes(graphicsObj);
-
+                
+                //fmfcd debug statusDisplayControl.Text = string.Format( "R1 elt " + R1.Elements[0] + " "
+                //    + R1.Elements[1] + " " + R1.Elements[2] + " " + R1.Elements[3] + " " + R1.Elements[4] + " " + R1.Elements[5]
+                //    + "matrixXFlipInitiator " + matrixXFlipInitiator);
                 if (DisplayMode == DisplayModeEnum.DisplayMode_GERBERONLY)
                 {
                     // Draw the Gerber File
@@ -952,6 +958,7 @@ namespace LineGrinder
                 //R2.Invert();
                 //lastTransformMatrix = R2;
                 // fmfcd
+                
                 switch (action)
                 {
                     case TA_Action.TA_SELECTION:
@@ -971,12 +978,26 @@ namespace LineGrinder
         public void paintSelect(Graphics graphicsObj)
         {
             // a afficher directement sur le graphics
+            Rectangle rcSelection = CalculRcSelect();
+
+            graphicsObj.DrawRectangle(ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN, rcSelection);
+            // Debug mouseCursorDisplayControl.Text = string.Format("rcSelection :" + rcSelection.Height +"w" + rcSelection.Width);
+        }
+
+        private Rectangle CalculRcSelect()
+        {
             Point endPoint = MouseToWorld(lastMouseDownPosition);
             Point startPoint = MouseToWorld(currentMouseMovePosition);
-            Rectangle rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
-            graphicsObj.DrawRectangle(ApplicationColorManager.DEFAULT_PLOT_ORIGIN_PEN, rcSelection);
-
+            Rectangle rcSelection;
+            if ((GerberFileToDisplay.FlipMode == FlipModeEnum.X_Flip) || (ExcellonFileToDisplay.FlipMode == FlipModeEnum.X_Flip))
+            {
+                rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
+            }
+            else
+                rcSelection = new Rectangle(endPoint.X, startPoint.Y, startPoint.X - endPoint.X, endPoint.Y - startPoint.Y);
+            return rcSelection;
         }
+
         public void noAction()  // plus d'action en cours
         {
             action = TA_Action.TA_AUCUNE;
@@ -986,7 +1007,7 @@ namespace LineGrinder
             /// TODO
             Point endPoint = MouseToWorld(lastMouseDownPosition);
             Point startPoint = MouseToWorld(currentMouseMovePosition);
-            Rectangle rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
+            Rectangle rcSelection = CalculRcSelect();
             if (gcodeFileToDisplay != null)
             {
 
@@ -997,20 +1018,20 @@ namespace LineGrinder
 
                     if (g.GetType() == typeof(GCodeCmd_Line))
                     {
-                        if (((GCodeCmd_Line)g).X0 > startPoint.X && ((GCodeCmd_Line)g).Y0 > startPoint.Y
-                            && ((GCodeCmd_Line)g).X0 < endPoint.X && ((GCodeCmd_Line)g).Y0 < endPoint.Y
+                        if (((GCodeCmd_Line)g).X0 > rcSelection.X && ((GCodeCmd_Line)g).Y0 > rcSelection.Y
+                            && ((GCodeCmd_Line)g).X0 < rcSelection.Right && ((GCodeCmd_Line)g).Y0 < rcSelection.Bottom
                             &&
-                             ((GCodeCmd_Line)g).X1 > startPoint.X && ((GCodeCmd_Line)g).Y1 > startPoint.Y
-                            && ((GCodeCmd_Line)g).X1 < endPoint.X && ((GCodeCmd_Line)g).Y1 < endPoint.Y)
+                             ((GCodeCmd_Line)g).X1 > rcSelection.X && ((GCodeCmd_Line)g).Y1 > rcSelection.Y
+                            && ((GCodeCmd_Line)g).X1 < rcSelection.Right && ((GCodeCmd_Line)g).Y1 < rcSelection.Bottom)
                             return true;
                     }
                     else if (g.GetType() == typeof(GCodeCmd_Arc))
                     {
-                        if (((GCodeCmd_Arc)g).X0 > startPoint.X && ((GCodeCmd_Arc)g).Y0 > startPoint.Y
-                            && ((GCodeCmd_Arc)g).X0 < endPoint.X && ((GCodeCmd_Arc)g).Y0 < endPoint.Y
+                        if (((GCodeCmd_Arc)g).X0 > rcSelection.X && ((GCodeCmd_Arc)g).Y0 > rcSelection.Y
+                            && ((GCodeCmd_Arc)g).X0 < rcSelection.Right && ((GCodeCmd_Arc)g).Y0 < rcSelection.Bottom
                             &&
-                             ((GCodeCmd_Arc)g).X1 > startPoint.X && ((GCodeCmd_Arc)g).Y1 > startPoint.Y
-                            && ((GCodeCmd_Arc)g).X1 < endPoint.X && ((GCodeCmd_Arc)g).Y1 < endPoint.Y)
+                             ((GCodeCmd_Arc)g).X1 > rcSelection.X && ((GCodeCmd_Arc)g).Y1 > rcSelection.Y
+                            && ((GCodeCmd_Arc)g).X1 < rcSelection.Right && ((GCodeCmd_Arc)g).Y1 < rcSelection.Bottom)
                             return true;
 
                     }
@@ -1036,8 +1057,9 @@ namespace LineGrinder
         //    base.OnMouseMove(e);
         private void ctlPlotViewer_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!this.Capture)
-                return;
+
+            //if (!this.Capture)
+            //    return;
             Point convertedPoint = MouseToWorld(e.Location);
             currentMouseMovePosition.X = e.X;
             currentMouseMovePosition.Y = e.Y;
@@ -1049,6 +1071,12 @@ namespace LineGrinder
                 {
                     case TA_Action.TA_SELECTION:
                         PaintFantome();
+                        // debug
+                        Point endPoint = MouseToWorld(lastMouseDownPosition);
+                        Point startPoint = MouseToWorld(currentMouseMovePosition);
+                        Rectangle rcSelection = new Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
+                        mouseCursorDisplayControl.Text = string.Format("rcSelection :" + rcSelection.Height +"w" + rcSelection.Width);
+                        // debug/
                         break;
                     default:
                         break;
@@ -1066,7 +1094,7 @@ namespace LineGrinder
 
         private void ctlPlotViewer_MouseDown(object sender, MouseEventArgs e)
         {
-
+            this.Focus();
             // enable panning
             panningActive = true;
             lastMouseDownPosition.X = e.X;
@@ -1158,6 +1186,12 @@ namespace LineGrinder
         //  base.OnMouseUp(e);
         private void ctlPlotViewer_MouseUp(object sender, MouseEventArgs e)
         {
+            if ( !this.Focused)
+            {
+                //debug statusDisplayControl.Text = string.Format("pas focus");
+                 return;
+            }
+            //statusDisplayControl.Text = string.Format("focus");
             if (e.Button == MouseButtons.Left)
             {
                 leftButtonDown = false;
@@ -1192,7 +1226,7 @@ namespace LineGrinder
             viewportMatrix.TransformPoints(tPoint);
             Point pObject = tPoint[0];
 
-            // fmfcd debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
+            // debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
             return pObject;
 
         }

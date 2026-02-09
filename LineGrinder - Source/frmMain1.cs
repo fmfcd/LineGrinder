@@ -187,6 +187,7 @@ namespace LineGrinder
             InitScreenDisplay();
             // set this so the plot viewer can use it
             ctlPlotViewer1.MouseCursorDisplayControl = textBoxMouseCursorDisplay;
+            ctlPlotViewer1.StatusDisplayControl = statusTextBox;
 
             // now recover the last configuration settings - if saved, we only do this if 
             // the control key is not pressed. This allows the user to start with the
@@ -1418,7 +1419,8 @@ namespace LineGrinder
         /// <summary>
         /// Gets the IsolationArray as a bitmap and sets it on the plot display
         /// this makes it possible for the user to see what is going on at the 
-        /// various stages and debug things
+        /// various stages and 
+        /// things
         /// </summary>
         /// <returns>z success, nz fail</returns>
         private int SetIsolationArrayBitmapAppropriateToDisplayMode()

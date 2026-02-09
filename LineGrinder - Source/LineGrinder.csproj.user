@@ -13,4 +13,7 @@
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>C:\Users\fm\Documents\fabPCB\LineGrinder-master\LineGrinder-master\OISCommon\</ReferencePath>
+  </PropertyGroup>
 </Project>

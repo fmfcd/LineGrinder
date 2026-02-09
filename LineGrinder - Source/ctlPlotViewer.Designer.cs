@@ -34,6 +34,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.Name = "ctlPlotViewer";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ctlPlotViewer_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlPlotViewer_MouseMove);
