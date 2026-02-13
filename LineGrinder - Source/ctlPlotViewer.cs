@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OISCommon;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,9 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
-    public partial class ctlPlotViewer : UserControl
+    public partial class ctlPlotViewer : ctlOISBase
     {
 
         // this determines the view we use to display the plot

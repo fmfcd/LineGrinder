@@ -1,4 +1,4 @@
-﻿namespace LineGrinder
+﻿namespace LineGrinderFmfcd
 {
     partial class ctlPlotViewer
     {

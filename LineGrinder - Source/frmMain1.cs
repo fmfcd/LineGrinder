@@ -31,7 +31,7 @@ using System.Drawing.Imaging;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -6325,6 +6325,11 @@ namespace LineGrinder
         }
 
         private void ctlPlotViewer1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_BreakLine_Click(object sender, EventArgs e)
         {
 
         }
