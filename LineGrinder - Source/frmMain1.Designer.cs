@@ -58,7 +58,6 @@ namespace LineGrinderFmfcd
             this.radioButtonMainViewEdgeMillGCode = new System.Windows.Forms.RadioButton();
             this.radioButtonIsoPlotStep1 = new System.Windows.Forms.RadioButton();
             this.radioButtonMainViewGerberPlot = new System.Windows.Forms.RadioButton();
-            this.ctlPlotViewer1 = new LineGrinderFmfcd.ctlPlotViewer();
             this.tabPageGerberCode = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxOpenGerberFileName = new System.Windows.Forms.TextBox();
@@ -113,7 +112,6 @@ namespace LineGrinderFmfcd
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxFileManagerTitle = new System.Windows.Forms.TextBox();
             this.textBoxFileManagerHeader = new System.Windows.Forms.TextBox();
-            this.ctlFileManagersDisplay1 = new LineGrinderFmfcd.ctlFileManagersDisplay();
             this.buttonSaveConfiguration = new System.Windows.Forms.Button();
             this.buttonOpenFile = new System.Windows.Forms.Button();
             this.buttonRecentFiles = new System.Windows.Forms.Button();
@@ -138,6 +136,8 @@ namespace LineGrinderFmfcd
             this.buttonSupGcode = new System.Windows.Forms.Button();
             this.statusTextBox = new System.Windows.Forms.TextBox();
             this.BtnBreakLine = new System.Windows.Forms.Button();
+            this.ctlPlotViewer1 = new LineGrinderFmfcd.ctlPlotViewer();
+            this.ctlFileManagersDisplay1 = new LineGrinderFmfcd.ctlFileManagersDisplay();
             this.tabControl1.SuspendLayout();
             this.tabPagePlot.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -174,7 +174,7 @@ namespace LineGrinderFmfcd
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1014, 595);
+            this.tabControl1.Size = new System.Drawing.Size(1437, 895);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPagePlot
@@ -191,7 +191,7 @@ namespace LineGrinderFmfcd
             this.tabPagePlot.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPagePlot.Name = "tabPagePlot";
             this.tabPagePlot.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPagePlot.Size = new System.Drawing.Size(1006, 562);
+            this.tabPagePlot.Size = new System.Drawing.Size(1429, 862);
             this.tabPagePlot.TabIndex = 0;
             this.tabPagePlot.Text = "Plot View";
             this.tabPagePlot.ToolTipText = "A view of the Gerber, GCode or intermediate conversion stages.";
@@ -201,7 +201,7 @@ namespace LineGrinderFmfcd
             // 
             this.buttonGoToFileManager.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonGoToFileManager.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonGoToFileManager.Location = new System.Drawing.Point(140, 449);
+            this.buttonGoToFileManager.Location = new System.Drawing.Point(140, 675);
             this.buttonGoToFileManager.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonGoToFileManager.Name = "buttonGoToFileManager";
             this.buttonGoToFileManager.Size = new System.Drawing.Size(56, 31);
@@ -214,7 +214,7 @@ namespace LineGrinderFmfcd
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 457);
+            this.label5.Location = new System.Drawing.Point(9, 683);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(101, 20);
@@ -224,7 +224,7 @@ namespace LineGrinderFmfcd
             // textBoxActiveFileManager
             // 
             this.textBoxActiveFileManager.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxActiveFileManager.Location = new System.Drawing.Point(4, 481);
+            this.textBoxActiveFileManager.Location = new System.Drawing.Point(4, 707);
             this.textBoxActiveFileManager.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxActiveFileManager.Name = "textBoxActiveFileManager";
             this.textBoxActiveFileManager.ReadOnly = true;
@@ -235,7 +235,7 @@ namespace LineGrinderFmfcd
             // 
             this.buttonMagnification100.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonMagnification100.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonMagnification100.Location = new System.Drawing.Point(140, 375);
+            this.buttonMagnification100.Location = new System.Drawing.Point(140, 601);
             this.buttonMagnification100.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonMagnification100.Name = "buttonMagnification100";
             this.buttonMagnification100.Size = new System.Drawing.Size(56, 31);
@@ -248,7 +248,7 @@ namespace LineGrinderFmfcd
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(4, 385);
+            this.label4.Location = new System.Drawing.Point(4, 611);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(103, 20);
@@ -259,7 +259,7 @@ namespace LineGrinderFmfcd
             // 
             this.comboBoxMagnification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBoxMagnification.FormattingEnabled = true;
-            this.comboBoxMagnification.Location = new System.Drawing.Point(4, 409);
+            this.comboBoxMagnification.Location = new System.Drawing.Point(4, 635);
             this.comboBoxMagnification.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxMagnification.Name = "comboBoxMagnification";
             this.comboBoxMagnification.Size = new System.Drawing.Size(188, 28);
@@ -521,19 +521,6 @@ namespace LineGrinderFmfcd
             this.radioButtonMainViewGerberPlot.UseVisualStyleBackColor = true;
             this.radioButtonMainViewGerberPlot.CheckedChanged += new System.EventHandler(this.radioButtonMainViewGerberPlot_CheckedChanged);
             // 
-            // ctlPlotViewer1
-            // 
-            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctlPlotViewer1.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ctlPlotViewer1.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.ctlPlotViewer1.Location = new System.Drawing.Point(200, 3);
-            this.ctlPlotViewer1.Margin = new System.Windows.Forms.Padding(5, 8, 6, 8);
-            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
-            this.ctlPlotViewer1.Size = new System.Drawing.Size(806, 563);
-            this.ctlPlotViewer1.TabIndex = 2;
-            // 
             // tabPageGerberCode
             // 
             this.tabPageGerberCode.Controls.Add(this.label1);
@@ -543,7 +530,7 @@ namespace LineGrinderFmfcd
             this.tabPageGerberCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageGerberCode.Name = "tabPageGerberCode";
             this.tabPageGerberCode.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageGerberCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageGerberCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageGerberCode.TabIndex = 2;
             this.tabPageGerberCode.Text = "Gerber File";
             this.tabPageGerberCode.ToolTipText = "The Gerber Code for Conversion";
@@ -568,7 +555,7 @@ namespace LineGrinderFmfcd
             this.textBoxOpenGerberFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxOpenGerberFileName.Name = "textBoxOpenGerberFileName";
             this.textBoxOpenGerberFileName.ReadOnly = true;
-            this.textBoxOpenGerberFileName.Size = new System.Drawing.Size(1219, 26);
+            this.textBoxOpenGerberFileName.Size = new System.Drawing.Size(1642, 26);
             this.textBoxOpenGerberFileName.TabIndex = 1;
             // 
             // richTextBoxGerberCode
@@ -581,7 +568,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxGerberCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxGerberCode.Name = "richTextBoxGerberCode";
             this.richTextBoxGerberCode.ReadOnly = true;
-            this.richTextBoxGerberCode.Size = new System.Drawing.Size(1434, 862);
+            this.richTextBoxGerberCode.Size = new System.Drawing.Size(1857, 820);
             this.richTextBoxGerberCode.TabIndex = 0;
             this.richTextBoxGerberCode.Text = "";
             this.richTextBoxGerberCode.WordWrap = false;
@@ -595,7 +582,7 @@ namespace LineGrinderFmfcd
             this.tabPageExcellonFile.Location = new System.Drawing.Point(4, 29);
             this.tabPageExcellonFile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageExcellonFile.Name = "tabPageExcellonFile";
-            this.tabPageExcellonFile.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageExcellonFile.Size = new System.Drawing.Size(1429, 862);
             this.tabPageExcellonFile.TabIndex = 7;
             this.tabPageExcellonFile.Text = "Excellon File";
             this.tabPageExcellonFile.UseVisualStyleBackColor = true;
@@ -619,7 +606,7 @@ namespace LineGrinderFmfcd
             this.textBoxOpenExcellonFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxOpenExcellonFileName.Name = "textBoxOpenExcellonFileName";
             this.textBoxOpenExcellonFileName.ReadOnly = true;
-            this.textBoxOpenExcellonFileName.Size = new System.Drawing.Size(1285, 26);
+            this.textBoxOpenExcellonFileName.Size = new System.Drawing.Size(1708, 26);
             this.textBoxOpenExcellonFileName.TabIndex = 3;
             // 
             // richTextBoxExcellonCode
@@ -632,7 +619,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxExcellonCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxExcellonCode.Name = "richTextBoxExcellonCode";
             this.richTextBoxExcellonCode.ReadOnly = true;
-            this.richTextBoxExcellonCode.Size = new System.Drawing.Size(1434, 866);
+            this.richTextBoxExcellonCode.Size = new System.Drawing.Size(1857, 824);
             this.richTextBoxExcellonCode.TabIndex = 2;
             this.richTextBoxExcellonCode.Text = "";
             this.richTextBoxExcellonCode.WordWrap = false;
@@ -646,7 +633,7 @@ namespace LineGrinderFmfcd
             this.tabPageIsolationGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageIsolationGCode.Name = "tabPageIsolationGCode";
             this.tabPageIsolationGCode.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageIsolationGCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageIsolationGCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageIsolationGCode.TabIndex = 3;
             this.tabPageIsolationGCode.Text = "Isolation GCode";
             this.tabPageIsolationGCode.ToolTipText = "The Isolation GCode generated from the supplied Gerber file.";
@@ -671,7 +658,7 @@ namespace LineGrinderFmfcd
             this.textBoxIsolationGCodeFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxIsolationGCodeFileName.Name = "textBoxIsolationGCodeFileName";
             this.textBoxIsolationGCodeFileName.ReadOnly = true;
-            this.textBoxIsolationGCodeFileName.Size = new System.Drawing.Size(1286, 26);
+            this.textBoxIsolationGCodeFileName.Size = new System.Drawing.Size(1709, 26);
             this.textBoxIsolationGCodeFileName.TabIndex = 3;
             // 
             // richTextBoxIsolationGCode
@@ -684,7 +671,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxIsolationGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxIsolationGCode.Name = "richTextBoxIsolationGCode";
             this.richTextBoxIsolationGCode.ReadOnly = true;
-            this.richTextBoxIsolationGCode.Size = new System.Drawing.Size(1432, 859);
+            this.richTextBoxIsolationGCode.Size = new System.Drawing.Size(1855, 817);
             this.richTextBoxIsolationGCode.TabIndex = 1;
             this.richTextBoxIsolationGCode.Text = "";
             this.richTextBoxIsolationGCode.WordWrap = false;
@@ -697,7 +684,7 @@ namespace LineGrinderFmfcd
             this.tabPageEdgeMillGCode.Location = new System.Drawing.Point(4, 29);
             this.tabPageEdgeMillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageEdgeMillGCode.Name = "tabPageEdgeMillGCode";
-            this.tabPageEdgeMillGCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageEdgeMillGCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageEdgeMillGCode.TabIndex = 4;
             this.tabPageEdgeMillGCode.Text = "Edge Mill GCode";
             this.tabPageEdgeMillGCode.ToolTipText = "GCode which can cut out the edges of the PCB from a larger sheet.";
@@ -722,7 +709,7 @@ namespace LineGrinderFmfcd
             this.textBoxEdgeMillGCodeFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxEdgeMillGCodeFileName.Name = "textBoxEdgeMillGCodeFileName";
             this.textBoxEdgeMillGCodeFileName.ReadOnly = true;
-            this.textBoxEdgeMillGCodeFileName.Size = new System.Drawing.Size(1224, 26);
+            this.textBoxEdgeMillGCodeFileName.Size = new System.Drawing.Size(1647, 26);
             this.textBoxEdgeMillGCodeFileName.TabIndex = 6;
             // 
             // richTextBoxEdgeMillGCode
@@ -735,7 +722,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxEdgeMillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxEdgeMillGCode.Name = "richTextBoxEdgeMillGCode";
             this.richTextBoxEdgeMillGCode.ReadOnly = true;
-            this.richTextBoxEdgeMillGCode.Size = new System.Drawing.Size(1434, 861);
+            this.richTextBoxEdgeMillGCode.Size = new System.Drawing.Size(1857, 819);
             this.richTextBoxEdgeMillGCode.TabIndex = 5;
             this.richTextBoxEdgeMillGCode.Text = "";
             this.richTextBoxEdgeMillGCode.WordWrap = false;
@@ -748,7 +735,7 @@ namespace LineGrinderFmfcd
             this.tabPageBedFlatteningGCode.Location = new System.Drawing.Point(4, 29);
             this.tabPageBedFlatteningGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageBedFlatteningGCode.Name = "tabPageBedFlatteningGCode";
-            this.tabPageBedFlatteningGCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageBedFlatteningGCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageBedFlatteningGCode.TabIndex = 5;
             this.tabPageBedFlatteningGCode.Text = "Bed Flattening GCode";
             this.tabPageBedFlatteningGCode.ToolTipText = "GCode which can true up, and make flat, the bed of the mill.";
@@ -773,7 +760,7 @@ namespace LineGrinderFmfcd
             this.textBoxBedFlatteningGCodeFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxBedFlatteningGCodeFileName.Name = "textBoxBedFlatteningGCodeFileName";
             this.textBoxBedFlatteningGCodeFileName.ReadOnly = true;
-            this.textBoxBedFlatteningGCodeFileName.Size = new System.Drawing.Size(1291, 26);
+            this.textBoxBedFlatteningGCodeFileName.Size = new System.Drawing.Size(1714, 26);
             this.textBoxBedFlatteningGCodeFileName.TabIndex = 8;
             // 
             // richTextBoxBedFlatteningGCode
@@ -786,7 +773,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxBedFlatteningGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxBedFlatteningGCode.Name = "richTextBoxBedFlatteningGCode";
             this.richTextBoxBedFlatteningGCode.ReadOnly = true;
-            this.richTextBoxBedFlatteningGCode.Size = new System.Drawing.Size(1434, 862);
+            this.richTextBoxBedFlatteningGCode.Size = new System.Drawing.Size(1857, 820);
             this.richTextBoxBedFlatteningGCode.TabIndex = 7;
             this.richTextBoxBedFlatteningGCode.Text = "";
             this.richTextBoxBedFlatteningGCode.WordWrap = false;
@@ -799,7 +786,7 @@ namespace LineGrinderFmfcd
             this.tabPageRefPinGCode.Location = new System.Drawing.Point(4, 29);
             this.tabPageRefPinGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageRefPinGCode.Name = "tabPageRefPinGCode";
-            this.tabPageRefPinGCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageRefPinGCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageRefPinGCode.TabIndex = 6;
             this.tabPageRefPinGCode.Text = "RefPin GCode";
             this.tabPageRefPinGCode.ToolTipText = "GCode which can drill the holes for the Reference Pins needed to align double sid" +
@@ -825,7 +812,7 @@ namespace LineGrinderFmfcd
             this.textBoxRefPinGCodeFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxRefPinGCodeFileName.Name = "textBoxRefPinGCodeFileName";
             this.textBoxRefPinGCodeFileName.ReadOnly = true;
-            this.textBoxRefPinGCodeFileName.Size = new System.Drawing.Size(1291, 26);
+            this.textBoxRefPinGCodeFileName.Size = new System.Drawing.Size(1714, 26);
             this.textBoxRefPinGCodeFileName.TabIndex = 11;
             // 
             // richTextBoxRefPinGCode
@@ -838,7 +825,7 @@ namespace LineGrinderFmfcd
             this.richTextBoxRefPinGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxRefPinGCode.Name = "richTextBoxRefPinGCode";
             this.richTextBoxRefPinGCode.ReadOnly = true;
-            this.richTextBoxRefPinGCode.Size = new System.Drawing.Size(1434, 862);
+            this.richTextBoxRefPinGCode.Size = new System.Drawing.Size(1857, 820);
             this.richTextBoxRefPinGCode.TabIndex = 10;
             this.richTextBoxRefPinGCode.Text = "";
             this.richTextBoxRefPinGCode.WordWrap = false;
@@ -851,7 +838,7 @@ namespace LineGrinderFmfcd
             this.tabPageDrillGCode.Location = new System.Drawing.Point(4, 29);
             this.tabPageDrillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageDrillGCode.Name = "tabPageDrillGCode";
-            this.tabPageDrillGCode.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageDrillGCode.Size = new System.Drawing.Size(1429, 862);
             this.tabPageDrillGCode.TabIndex = 8;
             this.tabPageDrillGCode.Text = "Drill GCode";
             this.tabPageDrillGCode.UseVisualStyleBackColor = true;
@@ -875,7 +862,7 @@ namespace LineGrinderFmfcd
             this.textBoxDrillGCodeFileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxDrillGCodeFileName.Name = "textBoxDrillGCodeFileName";
             this.textBoxDrillGCodeFileName.ReadOnly = true;
-            this.textBoxDrillGCodeFileName.Size = new System.Drawing.Size(1288, 26);
+            this.textBoxDrillGCodeFileName.Size = new System.Drawing.Size(1711, 26);
             this.textBoxDrillGCodeFileName.TabIndex = 14;
             // 
             // richTextBoxDrillGCode
@@ -888,20 +875,17 @@ namespace LineGrinderFmfcd
             this.richTextBoxDrillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.richTextBoxDrillGCode.Name = "richTextBoxDrillGCode";
             this.richTextBoxDrillGCode.ReadOnly = true;
-            this.richTextBoxDrillGCode.Size = new System.Drawing.Size(1432, 861);
+            this.richTextBoxDrillGCode.Size = new System.Drawing.Size(1855, 819);
             this.richTextBoxDrillGCode.TabIndex = 13;
             this.richTextBoxDrillGCode.Text = "";
             this.richTextBoxDrillGCode.WordWrap = false;
             // 
             // tabPageSettings
             // 
-            this.tabPageSettings.Controls.Add(this.groupBoxOutputUnits);
             this.tabPageSettings.Controls.Add(this.labelConfigChangesDisabled);
             this.tabPageSettings.Controls.Add(this.buttonAddNewFileManager);
             this.tabPageSettings.Controls.Add(this.buttonRemoveSelectedFileManager);
             this.tabPageSettings.Controls.Add(this.buttonRemoveAllFileManagers);
-            this.tabPageSettings.Controls.Add(this.groupBoxQuickFileManagerSetup);
-            this.tabPageSettings.Controls.Add(this.groupBoxDefaultApplicationUnits);
             this.tabPageSettings.Controls.Add(this.buttonViewLogfile);
             this.tabPageSettings.Controls.Add(this.groupBox2);
             this.tabPageSettings.Controls.Add(this.buttonSaveConfiguration);
@@ -909,7 +893,7 @@ namespace LineGrinderFmfcd
             this.tabPageSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageSettings.Name = "tabPageSettings";
             this.tabPageSettings.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageSettings.Size = new System.Drawing.Size(1006, 562);
+            this.tabPageSettings.Size = new System.Drawing.Size(1429, 862);
             this.tabPageSettings.TabIndex = 1;
             this.tabPageSettings.Text = "Settings";
             this.tabPageSettings.ToolTipText = "Configuration Settings";
@@ -920,7 +904,7 @@ namespace LineGrinderFmfcd
             this.groupBoxOutputUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOutputUnits.Controls.Add(this.radioButtonOutputUnitsAreMM);
             this.groupBoxOutputUnits.Controls.Add(this.radioButtonOutputUnitsAreIN);
-            this.groupBoxOutputUnits.Location = new System.Drawing.Point(1122, 242);
+            this.groupBoxOutputUnits.Location = new System.Drawing.Point(1113, 364);
             this.groupBoxOutputUnits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxOutputUnits.Name = "groupBoxOutputUnits";
             this.groupBoxOutputUnits.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -958,7 +942,7 @@ namespace LineGrinderFmfcd
             this.labelConfigChangesDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelConfigChangesDisabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelConfigChangesDisabled.ForeColor = System.Drawing.Color.DarkRed;
-            this.labelConfigChangesDisabled.Location = new System.Drawing.Point(1124, 331);
+            this.labelConfigChangesDisabled.Location = new System.Drawing.Point(1547, 331);
             this.labelConfigChangesDisabled.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelConfigChangesDisabled.Name = "labelConfigChangesDisabled";
             this.labelConfigChangesDisabled.Size = new System.Drawing.Size(298, 111);
@@ -970,7 +954,7 @@ namespace LineGrinderFmfcd
             // buttonAddNewFileManager
             // 
             this.buttonAddNewFileManager.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddNewFileManager.Location = new System.Drawing.Point(1138, 448);
+            this.buttonAddNewFileManager.Location = new System.Drawing.Point(1561, 748);
             this.buttonAddNewFileManager.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonAddNewFileManager.Name = "buttonAddNewFileManager";
             this.buttonAddNewFileManager.Size = new System.Drawing.Size(264, 35);
@@ -982,7 +966,7 @@ namespace LineGrinderFmfcd
             // buttonRemoveSelectedFileManager
             // 
             this.buttonRemoveSelectedFileManager.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveSelectedFileManager.Location = new System.Drawing.Point(1138, 488);
+            this.buttonRemoveSelectedFileManager.Location = new System.Drawing.Point(1561, 788);
             this.buttonRemoveSelectedFileManager.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRemoveSelectedFileManager.Name = "buttonRemoveSelectedFileManager";
             this.buttonRemoveSelectedFileManager.Size = new System.Drawing.Size(264, 35);
@@ -994,7 +978,7 @@ namespace LineGrinderFmfcd
             // buttonRemoveAllFileManagers
             // 
             this.buttonRemoveAllFileManagers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveAllFileManagers.Location = new System.Drawing.Point(1140, 528);
+            this.buttonRemoveAllFileManagers.Location = new System.Drawing.Point(1563, 828);
             this.buttonRemoveAllFileManagers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRemoveAllFileManagers.Name = "buttonRemoveAllFileManagers";
             this.buttonRemoveAllFileManagers.Size = new System.Drawing.Size(264, 35);
@@ -1010,11 +994,11 @@ namespace LineGrinderFmfcd
             this.groupBoxQuickFileManagerSetup.Controls.Add(this.buttonQuickSetupKiCad);
             this.groupBoxQuickFileManagerSetup.Controls.Add(this.buttonQuickSetupEagle);
             this.groupBoxQuickFileManagerSetup.Controls.Add(this.buttonQuickSetupDesignSpark);
-            this.groupBoxQuickFileManagerSetup.Location = new System.Drawing.Point(1124, 605);
+            this.groupBoxQuickFileManagerSetup.Location = new System.Drawing.Point(1115, 613);
             this.groupBoxQuickFileManagerSetup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxQuickFileManagerSetup.Name = "groupBoxQuickFileManagerSetup";
             this.groupBoxQuickFileManagerSetup.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxQuickFileManagerSetup.Size = new System.Drawing.Size(298, 205);
+            this.groupBoxQuickFileManagerSetup.Size = new System.Drawing.Size(268, 224);
             this.groupBoxQuickFileManagerSetup.TabIndex = 8;
             this.groupBoxQuickFileManagerSetup.TabStop = false;
             this.groupBoxQuickFileManagerSetup.Text = "Quick File Manager Setup";
@@ -1074,7 +1058,7 @@ namespace LineGrinderFmfcd
             this.groupBoxDefaultApplicationUnits.Controls.Add(this.labelIsoPlotPointsIN);
             this.groupBoxDefaultApplicationUnits.Controls.Add(this.radioButtonDefaultUnitsAreMM);
             this.groupBoxDefaultApplicationUnits.Controls.Add(this.radioButtonDefaultUnitsAreIN);
-            this.groupBoxDefaultApplicationUnits.Location = new System.Drawing.Point(1124, 26);
+            this.groupBoxDefaultApplicationUnits.Location = new System.Drawing.Point(1115, 139);
             this.groupBoxDefaultApplicationUnits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxDefaultApplicationUnits.Name = "groupBoxDefaultApplicationUnits";
             this.groupBoxDefaultApplicationUnits.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -1170,7 +1154,7 @@ namespace LineGrinderFmfcd
             // buttonViewLogfile
             // 
             this.buttonViewLogfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonViewLogfile.Location = new System.Drawing.Point(1138, 818);
+            this.buttonViewLogfile.Location = new System.Drawing.Point(1561, 1118);
             this.buttonViewLogfile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonViewLogfile.Name = "buttonViewLogfile";
             this.buttonViewLogfile.Size = new System.Drawing.Size(264, 35);
@@ -1184,14 +1168,17 @@ namespace LineGrinderFmfcd
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.groupBoxOutputUnits);
             this.groupBox2.Controls.Add(this.textBoxFileManagerTitle);
             this.groupBox2.Controls.Add(this.textBoxFileManagerHeader);
             this.groupBox2.Controls.Add(this.ctlFileManagersDisplay1);
-            this.groupBox2.Location = new System.Drawing.Point(4, 2);
+            this.groupBox2.Controls.Add(this.groupBoxQuickFileManagerSetup);
+            this.groupBox2.Controls.Add(this.groupBoxDefaultApplicationUnits);
+            this.groupBox2.Location = new System.Drawing.Point(4, 5);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(1110, 906);
+            this.groupBox2.Size = new System.Drawing.Size(1425, 847);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             // 
@@ -1202,11 +1189,11 @@ namespace LineGrinderFmfcd
             this.textBoxFileManagerTitle.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxFileManagerTitle.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxFileManagerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFileManagerTitle.Location = new System.Drawing.Point(62, 18);
+            this.textBoxFileManagerTitle.Location = new System.Drawing.Point(6, 5);
             this.textBoxFileManagerTitle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxFileManagerTitle.Multiline = true;
             this.textBoxFileManagerTitle.Name = "textBoxFileManagerTitle";
-            this.textBoxFileManagerTitle.Size = new System.Drawing.Size(988, 28);
+            this.textBoxFileManagerTitle.Size = new System.Drawing.Size(1303, 28);
             this.textBoxFileManagerTitle.TabIndex = 13;
             this.textBoxFileManagerTitle.Text = "File Managers";
             this.textBoxFileManagerTitle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1217,31 +1204,19 @@ namespace LineGrinderFmfcd
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFileManagerHeader.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxFileManagerHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxFileManagerHeader.Location = new System.Drawing.Point(62, 55);
+            this.textBoxFileManagerHeader.Location = new System.Drawing.Point(51, 43);
             this.textBoxFileManagerHeader.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxFileManagerHeader.Multiline = true;
             this.textBoxFileManagerHeader.Name = "textBoxFileManagerHeader";
-            this.textBoxFileManagerHeader.Size = new System.Drawing.Size(988, 86);
+            this.textBoxFileManagerHeader.Size = new System.Drawing.Size(1303, 86);
             this.textBoxFileManagerHeader.TabIndex = 11;
             this.textBoxFileManagerHeader.Text = resources.GetString("textBoxFileManagerHeader.Text");
             this.textBoxFileManagerHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // ctlFileManagersDisplay1
-            // 
-            this.ctlFileManagersDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctlFileManagersDisplay1.Location = new System.Drawing.Point(6, 155);
-            this.ctlFileManagersDisplay1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ctlFileManagersDisplay1.Name = "ctlFileManagersDisplay1";
-            this.ctlFileManagersDisplay1.Size = new System.Drawing.Size(1095, 748);
-            this.ctlFileManagersDisplay1.TabIndex = 6;
-            this.ctlFileManagersDisplay1.Load += new System.EventHandler(this.ctlFileManagersDisplay1_Load);
-            // 
             // buttonSaveConfiguration
             // 
             this.buttonSaveConfiguration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveConfiguration.Location = new System.Drawing.Point(1138, 863);
+            this.buttonSaveConfiguration.Location = new System.Drawing.Point(1561, 1163);
             this.buttonSaveConfiguration.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveConfiguration.Name = "buttonSaveConfiguration";
             this.buttonSaveConfiguration.Size = new System.Drawing.Size(264, 35);
@@ -1253,7 +1228,7 @@ namespace LineGrinderFmfcd
             // buttonOpenFile
             // 
             this.buttonOpenFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenFile.Location = new System.Drawing.Point(1027, 134);
+            this.buttonOpenFile.Location = new System.Drawing.Point(1450, 134);
             this.buttonOpenFile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOpenFile.Name = "buttonOpenFile";
             this.buttonOpenFile.Size = new System.Drawing.Size(222, 55);
@@ -1265,7 +1240,7 @@ namespace LineGrinderFmfcd
             // buttonRecentFiles
             // 
             this.buttonRecentFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRecentFiles.Location = new System.Drawing.Point(1027, 189);
+            this.buttonRecentFiles.Location = new System.Drawing.Point(1450, 189);
             this.buttonRecentFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRecentFiles.Name = "buttonRecentFiles";
             this.buttonRecentFiles.Size = new System.Drawing.Size(222, 35);
@@ -1277,7 +1252,7 @@ namespace LineGrinderFmfcd
             // buttonConvertToGCode
             // 
             this.buttonConvertToGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonConvertToGCode.Location = new System.Drawing.Point(1027, 226);
+            this.buttonConvertToGCode.Location = new System.Drawing.Point(1450, 226);
             this.buttonConvertToGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonConvertToGCode.Name = "buttonConvertToGCode";
             this.buttonConvertToGCode.Size = new System.Drawing.Size(222, 55);
@@ -1289,7 +1264,7 @@ namespace LineGrinderFmfcd
             // buttonSaveIsolationGCode
             // 
             this.buttonSaveIsolationGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveIsolationGCode.Location = new System.Drawing.Point(1027, 345);
+            this.buttonSaveIsolationGCode.Location = new System.Drawing.Point(1450, 345);
             this.buttonSaveIsolationGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveIsolationGCode.Name = "buttonSaveIsolationGCode";
             this.buttonSaveIsolationGCode.Size = new System.Drawing.Size(222, 35);
@@ -1301,7 +1276,7 @@ namespace LineGrinderFmfcd
             // buttonSaveIsolationGCodeAs
             // 
             this.buttonSaveIsolationGCodeAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveIsolationGCodeAs.Location = new System.Drawing.Point(1027, 548);
+            this.buttonSaveIsolationGCodeAs.Location = new System.Drawing.Point(1450, 548);
             this.buttonSaveIsolationGCodeAs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveIsolationGCodeAs.Name = "buttonSaveIsolationGCodeAs";
             this.buttonSaveIsolationGCodeAs.Size = new System.Drawing.Size(222, 35);
@@ -1313,7 +1288,7 @@ namespace LineGrinderFmfcd
             // buttonClearAll
             // 
             this.buttonClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClearAll.Location = new System.Drawing.Point(1027, 282);
+            this.buttonClearAll.Location = new System.Drawing.Point(1450, 282);
             this.buttonClearAll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(222, 35);
@@ -1325,7 +1300,7 @@ namespace LineGrinderFmfcd
             // buttonExit
             // 
             this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExit.Location = new System.Drawing.Point(1027, 566);
+            this.buttonExit.Location = new System.Drawing.Point(1450, 866);
             this.buttonExit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(222, 35);
@@ -1337,7 +1312,7 @@ namespace LineGrinderFmfcd
             // buttonHelp
             // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHelp.Location = new System.Drawing.Point(1027, 526);
+            this.buttonHelp.Location = new System.Drawing.Point(1450, 826);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(222, 35);
@@ -1350,7 +1325,7 @@ namespace LineGrinderFmfcd
             // 
             this.buttonAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAbout.Image = global::LineGrinderFmfcd.Properties.Resources.gear_s;
-            this.buttonAbout.Location = new System.Drawing.Point(1027, 6);
+            this.buttonAbout.Location = new System.Drawing.Point(1450, 14);
             this.buttonAbout.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonAbout.Name = "buttonAbout";
             this.buttonAbout.Size = new System.Drawing.Size(222, 111);
@@ -1364,18 +1339,18 @@ namespace LineGrinderFmfcd
             // 
             this.textBoxStatusLine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxStatusLine.Location = new System.Drawing.Point(4, 614);
+            this.textBoxStatusLine.Location = new System.Drawing.Point(4, 914);
             this.textBoxStatusLine.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxStatusLine.Name = "textBoxStatusLine";
             this.textBoxStatusLine.ReadOnly = true;
-            this.textBoxStatusLine.Size = new System.Drawing.Size(0, 26);
+            this.textBoxStatusLine.Size = new System.Drawing.Size(423, 26);
             this.textBoxStatusLine.TabIndex = 25;
             this.textBoxStatusLine.Text = "Status";
             // 
             // buttonSaveEdgeMillGCodeAs
             // 
             this.buttonSaveEdgeMillGCodeAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveEdgeMillGCodeAs.Location = new System.Drawing.Point(1027, 618);
+            this.buttonSaveEdgeMillGCodeAs.Location = new System.Drawing.Point(1450, 618);
             this.buttonSaveEdgeMillGCodeAs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveEdgeMillGCodeAs.Name = "buttonSaveEdgeMillGCodeAs";
             this.buttonSaveEdgeMillGCodeAs.Size = new System.Drawing.Size(222, 35);
@@ -1387,7 +1362,7 @@ namespace LineGrinderFmfcd
             // buttonSaveEdgeMillGCode
             // 
             this.buttonSaveEdgeMillGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveEdgeMillGCode.Location = new System.Drawing.Point(1027, 415);
+            this.buttonSaveEdgeMillGCode.Location = new System.Drawing.Point(1450, 415);
             this.buttonSaveEdgeMillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveEdgeMillGCode.Name = "buttonSaveEdgeMillGCode";
             this.buttonSaveEdgeMillGCode.Size = new System.Drawing.Size(222, 35);
@@ -1399,7 +1374,7 @@ namespace LineGrinderFmfcd
             // buttonSaveBedFlatteningGCodeAs
             // 
             this.buttonSaveBedFlatteningGCodeAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveBedFlatteningGCodeAs.Location = new System.Drawing.Point(1027, 654);
+            this.buttonSaveBedFlatteningGCodeAs.Location = new System.Drawing.Point(1450, 654);
             this.buttonSaveBedFlatteningGCodeAs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveBedFlatteningGCodeAs.Name = "buttonSaveBedFlatteningGCodeAs";
             this.buttonSaveBedFlatteningGCodeAs.Size = new System.Drawing.Size(222, 35);
@@ -1411,7 +1386,7 @@ namespace LineGrinderFmfcd
             // buttonSaveBedFlatteningGCode
             // 
             this.buttonSaveBedFlatteningGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveBedFlatteningGCode.Location = new System.Drawing.Point(1027, 451);
+            this.buttonSaveBedFlatteningGCode.Location = new System.Drawing.Point(1450, 451);
             this.buttonSaveBedFlatteningGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveBedFlatteningGCode.Name = "buttonSaveBedFlatteningGCode";
             this.buttonSaveBedFlatteningGCode.Size = new System.Drawing.Size(222, 35);
@@ -1423,7 +1398,7 @@ namespace LineGrinderFmfcd
             // buttonSaveRefPinGCodeAs
             // 
             this.buttonSaveRefPinGCodeAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveRefPinGCodeAs.Location = new System.Drawing.Point(1027, 583);
+            this.buttonSaveRefPinGCodeAs.Location = new System.Drawing.Point(1450, 583);
             this.buttonSaveRefPinGCodeAs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveRefPinGCodeAs.Name = "buttonSaveRefPinGCodeAs";
             this.buttonSaveRefPinGCodeAs.Size = new System.Drawing.Size(222, 35);
@@ -1435,7 +1410,7 @@ namespace LineGrinderFmfcd
             // buttonSaveRefPinGCode
             // 
             this.buttonSaveRefPinGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveRefPinGCode.Location = new System.Drawing.Point(1027, 380);
+            this.buttonSaveRefPinGCode.Location = new System.Drawing.Point(1450, 380);
             this.buttonSaveRefPinGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveRefPinGCode.Name = "buttonSaveRefPinGCode";
             this.buttonSaveRefPinGCode.Size = new System.Drawing.Size(222, 35);
@@ -1447,7 +1422,7 @@ namespace LineGrinderFmfcd
             // buttonSaveDrillGCode
             // 
             this.buttonSaveDrillGCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveDrillGCode.Location = new System.Drawing.Point(1027, 486);
+            this.buttonSaveDrillGCode.Location = new System.Drawing.Point(1450, 486);
             this.buttonSaveDrillGCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveDrillGCode.Name = "buttonSaveDrillGCode";
             this.buttonSaveDrillGCode.Size = new System.Drawing.Size(222, 35);
@@ -1459,7 +1434,7 @@ namespace LineGrinderFmfcd
             // buttonSaveDrillGCodeAs
             // 
             this.buttonSaveDrillGCodeAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveDrillGCodeAs.Location = new System.Drawing.Point(1027, 689);
+            this.buttonSaveDrillGCodeAs.Location = new System.Drawing.Point(1450, 689);
             this.buttonSaveDrillGCodeAs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveDrillGCodeAs.Name = "buttonSaveDrillGCodeAs";
             this.buttonSaveDrillGCodeAs.Size = new System.Drawing.Size(222, 35);
@@ -1471,7 +1446,7 @@ namespace LineGrinderFmfcd
             // textBoxMouseCursorDisplay
             // 
             this.textBoxMouseCursorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMouseCursorDisplay.Location = new System.Drawing.Point(487, 614);
+            this.textBoxMouseCursorDisplay.Location = new System.Drawing.Point(910, 914);
             this.textBoxMouseCursorDisplay.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxMouseCursorDisplay.Name = "textBoxMouseCursorDisplay";
             this.textBoxMouseCursorDisplay.ReadOnly = true;
@@ -1481,7 +1456,7 @@ namespace LineGrinderFmfcd
             // buttonSupGcode
             // 
             this.buttonSupGcode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSupGcode.Location = new System.Drawing.Point(1027, 410);
+            this.buttonSupGcode.Location = new System.Drawing.Point(1450, 744);
             this.buttonSupGcode.Name = "buttonSupGcode";
             this.buttonSupGcode.Size = new System.Drawing.Size(222, 31);
             this.buttonSupGcode.TabIndex = 22;
@@ -1493,18 +1468,19 @@ namespace LineGrinderFmfcd
             // 
             this.statusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.statusTextBox.Location = new System.Drawing.Point(446, 614);
+            this.statusTextBox.Location = new System.Drawing.Point(446, 914);
             this.statusTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.statusTextBox.Name = "statusTextBox";
             this.statusTextBox.ReadOnly = true;
-            this.statusTextBox.Size = new System.Drawing.Size(0, 26);
+            this.statusTextBox.Size = new System.Drawing.Size(423, 26);
             this.statusTextBox.TabIndex = 35;
             this.statusTextBox.Text = "Status";
             // 
             // BtnBreakLine
             // 
             this.BtnBreakLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnBreakLine.Location = new System.Drawing.Point(1027, 447);
+            this.BtnBreakLine.Enabled = false;
+            this.BtnBreakLine.Location = new System.Drawing.Point(1450, 783);
             this.BtnBreakLine.Name = "BtnBreakLine";
             this.BtnBreakLine.Size = new System.Drawing.Size(222, 31);
             this.BtnBreakLine.TabIndex = 36;
@@ -1512,11 +1488,36 @@ namespace LineGrinderFmfcd
             this.BtnBreakLine.UseVisualStyleBackColor = true;
             this.BtnBreakLine.Click += new System.EventHandler(this.btn_BreakLine_Click);
             // 
+            // ctlPlotViewer1
+            // 
+            this.ctlPlotViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctlPlotViewer1.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.ctlPlotViewer1.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.ctlPlotViewer1.Location = new System.Drawing.Point(200, 3);
+            this.ctlPlotViewer1.Margin = new System.Windows.Forms.Padding(5, 8, 6, 8);
+            this.ctlPlotViewer1.Name = "ctlPlotViewer1";
+            this.ctlPlotViewer1.Size = new System.Drawing.Size(1836, 789);
+            this.ctlPlotViewer1.TabIndex = 2;
+            // 
+            // ctlFileManagersDisplay1
+            // 
+            this.ctlFileManagersDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctlFileManagersDisplay1.Location = new System.Drawing.Point(6, 169);
+            this.ctlFileManagersDisplay1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ctlFileManagersDisplay1.Name = "ctlFileManagersDisplay1";
+            this.ctlFileManagersDisplay1.Size = new System.Drawing.Size(1081, 675);
+            this.ctlFileManagersDisplay1.TabIndex = 6;
+            this.ctlFileManagersDisplay1.Load += new System.EventHandler(this.ctlFileManagersDisplay1_Load);
+            // 
             // frmMain1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1252, 652);
+            this.ClientSize = new System.Drawing.Size(1675, 952);
             this.Controls.Add(this.BtnBreakLine);
             this.Controls.Add(this.statusTextBox);
             this.Controls.Add(this.buttonSupGcode);
