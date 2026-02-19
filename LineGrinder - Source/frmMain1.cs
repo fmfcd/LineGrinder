@@ -1340,8 +1340,7 @@ namespace LineGrinderFmfcd
                 settingsEnabledState = false;
             }
             // this goes in reverse
-            labelConfigChangesDisabled.Visible = !settingsEnabledState;
-
+            
             buttonAddNewFileManager.Enabled = settingsEnabledState;
             buttonRemoveSelectedFileManager.Enabled = settingsEnabledState;
             buttonRemoveAllFileManagers.Enabled = settingsEnabledState;
@@ -1766,11 +1765,8 @@ namespace LineGrinderFmfcd
             string appPath="";
             string errStr;
             XmlWriter writer=null;
-#if DEBUG
-            appPath = DEBUG_LOG_DIRECTORY;
-#else
+
             appPath = Path.GetDirectoryName(Application.ExecutablePath);
-#endif
             try
             {
                 string filePathAndName = Path.Combine(appPath, DEFAULT_CONFIG_FILENAME);
@@ -4723,7 +4719,7 @@ namespace LineGrinderFmfcd
 
             // set the ignore pins
             outputExcellonFile.SetIgnoreTools(ref errStr);
-
+/// fmfcd pbm d'origine des perçages si on ne centre pas -> devenir dépendant d'une options GCodeOriginAtCenter == false
             // find the mid point now before margin adjustments, If we have reference pins this point will later be set with a better value
             outputExcellonFile.MidDCodeXCoord = 0 + (outputExcellonFile.MaxDCodeXCoord + outputExcellonFile.MinDCodeXCoord) / 2;  // the origin is always zero
             outputExcellonFile.MidDCodeYCoord = 0 + (outputExcellonFile.MaxDCodeYCoord + outputExcellonFile.MinDCodeYCoord) / 2;  // the origin is always zero
@@ -4739,8 +4735,11 @@ namespace LineGrinderFmfcd
             float xOffset = tmpXMin * -1;
             float yOffset = tmpYMin * -1;
             // set our offset to move the lowest point we have near the origin
-            outputExcellonFile.SetExcellonPlotOriginCoordinateAdjustments(xOffset, yOffset);
-
+            /// fmfcd pbm de l'origine des fichier drill excello,
+            
+            //outputExcellonFile.SetExcellonPlotOriginCoordinateAdjustments(xOffset, yOffset);
+            /// fmfcd*/
+            /// 
             //DebugMessage("ExcellonFile (xMargin,yMargin)=(" + xMargin.ToString() + "," + yMargin.ToString() + ")");
             //DebugMessage("ExcellonFile (MinDCodeXCoord,MinDCodeYCoord)=(" + outputExcellonFile.MinDCodeXCoord.ToString() + "," + outputExcellonFile.MinDCodeYCoord.ToString() + ")");
             LogMessage("ExcellonFile (OffsetX,OffsetY)=(" + xOffset.ToString() + "," + yOffset.ToString() + ")");
@@ -4986,7 +4985,8 @@ namespace LineGrinderFmfcd
             float xOffset = tmpXMin * -1;
             float yOffset = tmpYMin * -1;
             // set our offset to move the lowest point we have near the origin
-            outputGerberFile.SetGerberPlotOriginCoordinateAdjustments(xOffset, yOffset);
+            /// fmfcd   problème de décalage d'origine inappropriée !
+            //outputGerberFile.SetGerberPlotOriginCoordinateAdjustments(xOffset, yOffset);
 
             //DebugMessage("GerberFile (xMargin,yMargin)=(" + xMargin.ToString() + "," + yMargin.ToString() + ")");
             //DebugMessage("GerberFile (MinDCodeXCoord,MinDCodeYCoord)=(" + outputGerberFile.MinDCodeXCoord.ToString() + "," + outputGerberFile.MinDCodeYCoord.ToString() + ")");
@@ -6330,6 +6330,11 @@ namespace LineGrinderFmfcd
         }
 
         private void btn_BreakLine_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxFileManagerHeader_TextChanged(object sender, EventArgs e)
         {
 
         }

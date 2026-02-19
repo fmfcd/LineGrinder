@@ -24,7 +24,7 @@ using OISCommon;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -67,14 +67,17 @@ namespace LineGrinder
         public const OperationModeEnum DEFAULT_OPERATION_MODE = OperationModeEnum.Default;
         [DataMember]
         private OperationModeEnum operationMode = DEFAULT_OPERATION_MODE;
-
-        public const ApplicationUnitsEnum DEFAULT_FILEMANGER_UNITS = ApplicationUnitsEnum.INCHES;
+        // en mm par defaut à parametrer dans les options
+        public const ApplicationUnitsEnum DEFAULT_FILEMANGER_UNITS = ApplicationUnitsEnum.MILLIMETERS;
         [DataMember]
         private ApplicationUnitsEnum fileManagerUnits = DEFAULT_FILEMANGER_UNITS;
 
         // this determines whether we automatically adjust the origin
         // in the output GCode file
-        public const bool DEFAULT_GCODEORIGINATCENTER = true;
+        /// <summary>
+        /// fmfcd false au lieu de true
+        /// </summary>
+        public const bool DEFAULT_GCODEORIGINATCENTER = false; 
         [DataMember]
         private bool gCodeOriginAtCenter = DEFAULT_GCODEORIGINATCENTER;
 
@@ -466,6 +469,7 @@ namespace LineGrinder
         #region Excellon category variables
 
         // this determines whether we generate Excellon Drilling GCodes
+        
         public const bool DEFAULT_DRILLINGGCODE_ENABLED = true;
         [DataMember]
         private bool drillingGCodeEnabled = DEFAULT_DRILLINGGCODE_ENABLED;

@@ -1,4 +1,5 @@
 ﻿using OISCommon;
+using OISCommon;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -70,7 +71,7 @@ namespace LineGrinderFmfcd
         private const int DEFAULT_PADDING_TOP = 10;
         private const int DEFAULT_PADDING_RIGHT = 10;
         private const int DEFAULT_PADDING_BOTTOM = 10;
-        Padding plotPadding = new Padding(DEFAULT_PADDING_LEFT, DEFAULT_PADDING_TOP, DEFAULT_PADDING_TOP, DEFAULT_PADDING_BOTTOM);
+        Padding plotPadding = new Padding(DEFAULT_PADDING_LEFT, DEFAULT_PADDING_TOP, DEFAULT_PADDING_TOP, DEFAULT_PADDING_BOTTOM); // espace avec le bord
         public const int DEFAULT_PLOT_WIDTH = 1000;
         public const int DEFAULT_PLOT_HEIGHT = 850;
 
@@ -1006,8 +1007,8 @@ namespace LineGrinderFmfcd
         public void selectElements()
         {
             /// TODO
-            Point endPoint = MouseToWorld(lastMouseDownPosition);
-            Point startPoint = MouseToWorld(currentMouseMovePosition);
+            PointF endPoint = MouseToWorldF(lastMouseDownPosition);
+            PointF startPoint = MouseToWorldF(currentMouseMovePosition);
             Rectangle rcSelection = CalculRcSelect();
             if (gcodeFileToDisplay != null)
             {
@@ -1061,7 +1062,7 @@ namespace LineGrinderFmfcd
 
             //if (!this.Capture)
             //    return;
-            Point convertedPoint = MouseToWorld(e.Location);
+            PointF convertedPoint = MouseToWorldF(e.Location);
             currentMouseMovePosition.X = e.X;
             currentMouseMovePosition.Y = e.Y;
 
@@ -1226,12 +1227,32 @@ namespace LineGrinderFmfcd
             Point[] tPoint = { location };
             viewportMatrix.TransformPoints(tPoint);
             Point pObject = tPoint[0];
-
+            pObject.X -= (int)(plotXOriginLocation * IsoPlotPointsPerAppUnit);
+            pObject.Y -= (int)(plotXOriginLocation * IsoPlotPointsPerAppUnit);
             // debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
             return pObject;
 
         }
+        /// <summary>
+        /// fmfcd
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        PointF MouseToWorldF(Point location)
+        {
+            // trouver l'origine du gerber
+            //Point pObject = new Point(location.X, this.Height - (location.Y));
+            Point[] tPoint = { location };
+            viewportMatrix.TransformPoints(tPoint);
+            PointF pObject = tPoint[0];
+            pObject.X /= IsoPlotPointsPerAppUnit;
+            pObject.Y /= IsoPlotPointsPerAppUnit;
+            pObject.X -= plotXOriginLocation;
+            pObject.Y -= plotXOriginLocation;
+            // debug mouseCursorDisplayControl.Text = string.Format("X: {0} , Y: {1} lX: {2} , lY: {3}", pObject.X, pObject.Y, location.X, location.Y);
+            return pObject;
 
+        }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
         /// <summary>
         /// This returns the number of dots per app unit on the screen. If the 
@@ -1374,8 +1395,7 @@ namespace LineGrinderFmfcd
 
             // the zero in here just re-inforces that we are offsetting from the (0,0) plot position
             double xOrigin = 0 + Math.Round((plotXOriginLocation * IsoPlotPointsPerAppUnit)); ;
-            double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;
-            //   DebugMessage("xOrigin = " + xOrigin.ToString() + " xScreenScale=" + xScreenScale.ToString());
+            double yOrigin = 0 + Math.Round((plotYOriginLocation * IsoPlotPointsPerAppUnit)); ;         
 
             Point startPointX = new Point(((int)xOrigin) + (xLineLen * -1), (int)yOrigin);
             Point endPointX = new Point(((int)xOrigin) + xLineLen, (int)yOrigin);
@@ -1411,9 +1431,7 @@ namespace LineGrinderFmfcd
             int xLineLen = (int)(ORIGIN_CROSSHAIR_LEN / xScreenScale);
             int yLineLen = (int)(ORIGIN_CROSSHAIR_LEN / yScreenScale);
             int circleRadiusX = (int)(ORIGIN_CIRCLE_RADIUS / xScreenScale);
-            int circleRadiusY = (int)(ORIGIN_CIRCLE_RADIUS / yScreenScale);
-
-            //  DebugMessage("xScreenScale = " + xScreenScale.ToString() + " xLineLen=" + xLineLen.ToString() + " MagnificationLevel=" + MagnificationLevel.ToString());
+            int circleRadiusY = (int)(ORIGIN_CIRCLE_RADIUS / yScreenScale);       
 
             if (gcodeOriginAtCenter == true)
             {
