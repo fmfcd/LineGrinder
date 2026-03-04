@@ -21,7 +21,7 @@ using OISCommon;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -54,6 +54,7 @@ namespace LineGrinder
         public const string GCODEWORD_XYPLANE = "G17";
         public const string GCODEWORD_COORDMODE_ABSOLUTE = "G90";
         public const string GCODEWORD_SPINDLESTART_CW = "M03";
+        public const string GCODEWORD_SPINDLESTARTWITHSPEED_CW = "S10000 M03";  /// fmfcd 28022026
         public const string GCODEWORD_SPINDLESTOP = "M05";
         public const string GCODEWORD_PROGRAMEND = "M02";
         public const string GCODEWORD_SETPOSITION = "G92";

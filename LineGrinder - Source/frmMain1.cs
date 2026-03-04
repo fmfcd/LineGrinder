@@ -5594,7 +5594,8 @@ namespace LineGrinderFmfcd
             if (wantSpindleStartCodes == true)
             {
                 // M03 start spindle
-                cwLine = new GCodeCmd_CommandWord(GCodeCmd.GCODEWORD_SPINDLESTART_CW, "Start spindle");
+                //cwLine = new GCodeCmd_CommandWord(GCodeCmd.GCODEWORD_SPINDLESTART_CW, "Start spindle");
+                cwLine = new GCodeCmd_CommandWord(GCodeCmd.GCODEWORD_SPINDLESTARTWITHSPEED_CW, "Start spindle speed 10000");
                 gcFile.AddLine(cwLine);
 
                 // G04 Dwell 
