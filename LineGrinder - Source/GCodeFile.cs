@@ -22,7 +22,7 @@ using System.ComponentModel;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -170,7 +170,7 @@ namespace LineGrinder
             // get all of the lines into the list
             foreach (GCodeCmd gLineObj in SourceLines)
             {
-                sb.Append(gLineObj.GetGCodeCmd(StateMachine));
+                sb.Append(gLineObj.GetGCodeCmd(StateMachine));  // effectue le flip horizontale ici
             }
 
             return sb;
@@ -799,6 +799,27 @@ namespace LineGrinder
                 
             }
             listeIndexSelection.Clear();
+        }
+
+        // fmfcd 05032026
+        public GCodeFile Clone()
+        {
+            GCodeFile retGCode = new GCodeFile();
+            retGCode.sourceLines = new List<GCodeCmd>(sourceLines);
+           
+            return retGCode;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // get all of the lines into the list
+            foreach (GCodeCmd gLineObj in SourceLines)
+            {
+                sb.Append(gLineObj.GetGCodeCmd( stateMachine));  // effectue le flip horizontale ici
+            }
+            return sb.ToString();
         }
     }
 }

@@ -197,9 +197,9 @@ namespace LineGrinderFmfcd
             // will have been shifed so that all values are non negative. This puts the origin in the lower left
             // hand corner. If the user wanted the GCode output to be defined relative to the center of the plot
             // we must SUBTRACT it from the value here
-            float interimX = (xCoordToConvert / stateMachine.IsoPlotPointsPerAppUnit) - stateMachine.GCodeOutputPlotOriginAdjust_X + (stateMachine.AbsoluteOffset_X / stateMachine.IsoPlotPointsPerAppUnit);
+        /*    float interimX = (xCoordToConvert / stateMachine.IsoPlotPointsPerAppUnit) - stateMachine.GCodeOutputPlotOriginAdjust_X + (stateMachine.AbsoluteOffset_X / stateMachine.IsoPlotPointsPerAppUnit);
 
-            // are we mirroring around a veritical axis?
+            // are we mirroring around a vertical axis? fmfcd   -> FlipExcellon effective 
             if(stateMachine.MirrorOnConversionToGCode == FlipModeEnum.X_Flip)
             {
                 interimX = (interimX * -1);
@@ -221,7 +221,15 @@ namespace LineGrinderFmfcd
             // apply the rezero factor if needed and return
             if (stateMachine.ApplyRezeroFactor == true) return interimX - stateMachine.RezeroFactor_X;
             else return interimX;
+        */
+        // fmfcd simplification du calcul
 
+            float interimX = (xCoordToConvert / stateMachine.IsoPlotPointsPerAppUnit);
+            if (stateMachine.MirrorOnConversionToGCode == FlipModeEnum.X_Flip)
+            {
+                interimX = (interimX * -1) + 2 * stateMachine.GCodeMirrorAxisPlotCoord_X;
+            }
+            return interimX;
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -237,7 +245,7 @@ namespace LineGrinderFmfcd
         /// <param name="stateMachine">the statemachine</param>
         /// <param name="yCoordToConvert">the coord to convert</param>
         public float ConvertIsoPlotCoordToGCodeOutputCoord_Y(GCodeFileStateMachine stateMachine, int yCoordToConvert)
-        {
+        {/*
             // basically we divide by the isoPlot scaling to get plot values. Note that the xCoordToConvert
             // will have been shifed so that all values are non negative. This puts the origin in the lower left
             // hand corner. If the user wanted the GCode output to be defined relative to the center of the plot
@@ -250,6 +258,9 @@ namespace LineGrinderFmfcd
             // apply the rezero factor if needed and return
             if (stateMachine.ApplyRezeroFactor == true) return interimY - stateMachine.RezeroFactor_Y;
             else return interimY;
+            */
+            float interimY = (yCoordToConvert / stateMachine.IsoPlotPointsPerAppUnit);
+            return interimY;
         }
 
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=

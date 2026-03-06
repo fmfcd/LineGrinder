@@ -35,7 +35,7 @@ using System.ComponentModel;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -2158,7 +2158,8 @@ namespace LineGrinder
 
             //DebugMessage("SetBuilderIDOnGSIsoCell: ID=" + isoPlotObjectID.ToString() + " (" + ix.ToString() + "," + iy.ToString() + ")");
 
-            // sanity check the coordinates here
+            // sanity check the coordinates here fmfcd -> probleme de limite du tableau ???
+             
             if (ix < 0)
             {
                 throw new Exception("SetBuilderIDOnGSIsoCell invalid value ix=" + ix.ToString());
@@ -2175,7 +2176,7 @@ namespace LineGrinder
             {
                 throw new Exception("SetBuilderIDOnGSIsoCell invalid value iy >= isoPlotHeight, iy=" + iy.ToString() + ", isoPlotHeight=" + isoPlotHeight.ToString());
             }
-
+            
             if (isoPlotObjectID == 0)
             {
                 // zero means the zeroth entry in the builder array, which is always the background builderID

@@ -21,7 +21,7 @@ using OISCommon;
 /// ¦ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                         ¦
 /// +------------------------------------------------------------------------------------------------------------------------------+
 
-namespace LineGrinder
+namespace LineGrinderFmfcd
 {
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
     /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -95,6 +95,7 @@ namespace LineGrinder
         /// current context in the stateMachine requires it
         /// </summary>
         /// <param name="stateMachine">the stateMachine</param>
+        /// // mais cela modifie le source line originale du GCodeCFile
         public override string GetGCodeCmd(GCodeFileStateMachine stateMachine)
         {
             StringBuilder sb = new StringBuilder();

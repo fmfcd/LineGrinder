@@ -122,7 +122,7 @@ namespace LineGrinderFmfcd
             EASY_EDA,
         }
 
-        // some known filename extensions
+        // some known filename extensions fmfcd Standard
         public const string KNOWN_EXT_TOPCOPPER_KICAD = "-F_Cu.gbr";
         public const string KNOWN_EXT_BOTCOPPER_KICAD = "-B_Cu.gbr";
         public const string KNOWN_EXT_EDGECUT_KICAD = "-Edge_Cuts.gbr";

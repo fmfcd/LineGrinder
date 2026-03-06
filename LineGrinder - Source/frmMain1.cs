@@ -3443,8 +3443,13 @@ namespace LineGrinderFmfcd
                 ctlPlotViewer1.GCodeFileToDisplay.supSelectLineSource();
                 ctlPlotViewer1.noAction();
                 ctlPlotViewer1.Invalidate();
+                
                 CurrentIsolationGCodeFile = ctlPlotViewer1.GCodeFileToDisplay;
+                CurrentIsolationGCodeFile.HasBeenSaved = false;
+                // we need to set our toolhead parameters here
+                CurrentIsolationGCodeFile.StateMachine.ToolHeadSetup = new ToolHeadParameters(5, CurrentFileManager, ToolHeadParametersModeEnum.ISOCUT);                
                 richTextBoxIsolationGCode.Text = CurrentIsolationGCodeFile.GetGCodeCmdsAsText().ToString();
+                
             }
         }
         /// +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
@@ -5367,6 +5372,7 @@ namespace LineGrinderFmfcd
             }
             // always give it the flip Axis
             gcFile.GCodeMirrorAxisPlotCoord_X = gerberFile.MidPlotXCoord;
+            tbDimX.Text = gerberFile.MidPlotXCoord.ToString();
             // are we actually flipping 
             gcFile.MirrorOnConversionToGCode = gerberFile.FlipMode;
 
@@ -5423,7 +5429,16 @@ namespace LineGrinderFmfcd
                 gcFile.GCodeOutputPlotOriginAdjust_Y = 0;
             }
             // always give it the flip Axis
-            gcFile.GCodeMirrorAxisPlotCoord_X = excellonFile.MidPlotXCoord;
+            //gcFile.GCodeMirrorAxisPlotCoord_X = excellonFile.MidPlotXCoord;  // fmfcd dim_X
+            try
+            {
+                gcFile.GCodeMirrorAxisPlotCoord_X = (float)Convert.ToDouble(tbDimX.Text);  // fmfcd dim_X
+
+            }
+            catch ( FormatException e){
+                gcFile.GCodeMirrorAxisPlotCoord_X = 0;
+            } 
+            
 
             // are we actually flipping 
             gcFile.MirrorOnConversionToGCode = excellonFile.FlipMode;
@@ -6337,6 +6352,63 @@ namespace LineGrinderFmfcd
 
         private void textBoxFileManagerHeader_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnFileManagerStandard_Click(object sender, EventArgs e)
+        {
+            FileManager mgrObj;
+            FileManager defMgrObj;
+
+            // get the default manager
+            defMgrObj = ctlFileManagersDisplay1.GetDefaultFileManagerObject();
+
+            // now create the bottom copper
+            mgrObj = FileManager.DeepClone(defMgrObj);
+            mgrObj.OperationMode = FileManager.OperationModeEnum.IsolationCut;
+            mgrObj.IsoFlipMode = FlipModeEnum.X_Flip;
+            mgrObj.IsoFlipAxisFoundBy = FlipAxisFoundByEnum.CalculateFromBoard;
+            mgrObj.ReferencePinGCodeEnabled = false;
+            mgrObj.ReferencePinsAreIsoRouted = false;
+            mgrObj.FilenamePattern = ".gbr";
+            mgrObj.Description = "Bottom Layer mm";
+            ctlFileManagersDisplay1.AddFileManager(mgrObj);
+            mgrObj.IsoZCutLevel = -0.1f;
+            mgrObj.IsoZMoveLevel = 0.5f;
+
+            // now create the top copper
+            mgrObj = FileManager.DeepClone(defMgrObj);
+            mgrObj.OperationMode = FileManager.OperationModeEnum.IsolationCut;
+            mgrObj.IsoFlipMode = FlipModeEnum.No_Flip;
+            mgrObj.IsoFlipAxisFoundBy = FlipAxisFoundByEnum.CalculateFromBoard;
+            mgrObj.ReferencePinGCodeEnabled = false;
+            mgrObj.ReferencePinsAreIsoRouted = false;
+            mgrObj.FilenamePattern = "top.gbr";
+            mgrObj.Description = "Top Layer mm";
+            ctlFileManagersDisplay1.AddFileManager(mgrObj);
+
+          /*  // now create the board outline
+            mgrObj = FileManager.DeepClone(defMgrObj);
+            mgrObj.OperationMode = FileManager.OperationModeEnum.BoardEdgeMill;
+            mgrObj.EdgeMillFlipMode = FlipModeEnum.No_Flip;
+            mgrObj.EdgeMillFlipAxisFoundBy = FlipAxisFoundByEnum.CalculateFromBoard;
+            mgrObj.FilenamePattern = FileManager.KNOWN_EXT_EDGECUT_KICAD;
+            mgrObj.Description = "KiCad Board Outline";
+            ctlFileManagersDisplay1.AddFileManager(mgrObj);
+          */
+            // now create the excellon for plated holes
+            mgrObj = FileManager.DeepClone(defMgrObj);
+            mgrObj.OperationMode = FileManager.OperationModeEnum.Excellon;
+            mgrObj.DrillFlipMode = FlipModeEnum.X_Flip;
+            mgrObj.DrillFlipAxisFoundBy = FlipAxisFoundByEnum.CalculateFromBoard;
+            mgrObj.FilenamePattern = ".xln";
+            mgrObj.Description = "Excellon mm Bottom Drill file.";
+            mgrObj.DrillingCoordinateZerosMode = FileManager.ExcellonDrillingCoordinateZerosModeEnum.FixedDecimalPoint;
+            mgrObj.DrillingNumberOfDecimalPlaces = 3;
+            ctlFileManagersDisplay1.AddFileManager(mgrObj);
+
+
+            OISMessageBox("Template File Managers suitable for no name in mm have been added.\n\nThe parameters will be at their default settings. You should check them to be sure they are set appropriate to your requirements.");
 
         }
     }
